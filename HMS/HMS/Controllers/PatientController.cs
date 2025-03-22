@@ -7,25 +7,25 @@ namespace HMS.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DoctorController : Controller
+    public class PatientController : Controller
     {
         private readonly ApplicationDbContext context;
 
-        public DoctorController(ApplicationDbContext context)
+        public PatientController(ApplicationDbContext context)
         {
             this.context = context;
         }
         [HttpGet]
-        public async Task<ActionResult<List<Doctor>>> GetDoctor()
+        public async Task<ActionResult<List<Patient>>> GetPatient()
         {
-            var data = await context.Doctors.ToListAsync();
+            var data = await context.Patients.ToListAsync();
             return Ok(data);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Doctor>> GetDoctorById(int id)
+        public async Task<ActionResult<Patient>> GetPatientById(int id)
         {
-            var std = await context.Doctors.FindAsync(id);
+            var std = await context.Patients.FindAsync(id);
             if (std == null)
             {
                 return NotFound();
@@ -34,35 +34,35 @@ namespace HMS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Doctor>> CreateStudent(Doctor doctor)
+        public async Task<ActionResult<Patient>> CreatePatient(Patient patient)
         {
-            await context.Doctors.AddAsync(doctor);
+            await context.Patients.AddAsync(patient);
             await context.SaveChangesAsync();
-            return Ok(doctor);
+            return Ok(patient);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Doctor>> UpdateStudent(int id, Doctor doctor)
+        public async Task<ActionResult<Patient>> UpdatePatient(int id, Patient patient)
         {
-            if (id != doctor.Id)
+            if (id != patient.Id)
             {
                 return BadRequest();
             }
-            context.Entry(doctor).State = EntityState.Modified;
+            context.Entry(patient).State = EntityState.Modified;
             await context.SaveChangesAsync();
-            return Ok(doctor);
+            return Ok(patient);
 
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Doctor>> DeleteDoctor(int id)
+        public async Task<ActionResult<Patient>> DeletePatient(int id)
         {
-            var doc = await context.Doctors.FindAsync(id);
-            if (doc == null)
+            var patient = await context.Patients.FindAsync(id);
+            if (patient == null)
             {
                 return NotFound();
             }
-            context.Doctors.Remove(doc);
+            context.Patients.Remove(patient);
             await context.SaveChangesAsync();
             return Ok();
 
