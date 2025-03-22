@@ -4,6 +4,7 @@ using HMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250322075554_newmodel")]
+    partial class newmodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -197,7 +200,7 @@ namespace HMS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PrescriptionId")
+                    b.Property<int?>("PrescriptionId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ToDate")
@@ -337,13 +340,9 @@ namespace HMS.Migrations
 
             modelBuilder.Entity("HMS.Models.MedicineInfo", b =>
                 {
-                    b.HasOne("HMS.Models.Prescription", "Prescription")
+                    b.HasOne("HMS.Models.Prescription", null)
                         .WithMany("MedicineInfos")
-                        .HasForeignKey("PrescriptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Prescription");
+                        .HasForeignKey("PrescriptionId");
                 });
 
             modelBuilder.Entity("HMS.Models.Prescription", b =>

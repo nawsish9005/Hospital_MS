@@ -1,5 +1,7 @@
 ﻿using HMS.Models;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HMS.Data
 {
@@ -11,6 +13,8 @@ namespace HMS.Data
         public DbSet<Patient> Patients { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<MedicalRecord> MedicalRecords { get; set; }
+        public DbSet<Prescription> Prescriptions { get; set; }
+        public DbSet<MedicineInfo> MedicineInfos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,6 +56,13 @@ namespace HMS.Data
                     .HasForeignKey(a => a.PatientId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
+            modelBuilder.Entity<MedicineInfo>()
+            .HasOne(id => id.Prescription)
+            .WithMany(i => i.MedicineInfos)
+            .HasForeignKey(id => id.PrescriptionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
 
             OnModelCreatingPartial(modelBuilder);
         }
