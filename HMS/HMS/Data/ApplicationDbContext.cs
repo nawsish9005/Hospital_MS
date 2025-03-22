@@ -16,12 +16,41 @@ namespace HMS.Data
         {
             modelBuilder.Entity<Doctor>(entity =>
             {
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-                entity.Property(e => e.Specialization)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.Property(e => e.Name).HasMaxLength(50).IsUnicode(false);
+                entity.Property(e => e.Specialization).HasMaxLength(50).IsUnicode(false);
+                entity.Property(e => e.Contact).HasMaxLength(20).IsUnicode(false);
+                entity.Property(e => e.Email).HasMaxLength(100).IsUnicode(false);
+                entity.Property(e => e.Address).HasMaxLength(255).IsUnicode(false);
+                entity.Property(e => e.Region).HasMaxLength(50).IsUnicode(false);
+                entity.Property(e => e.Country).HasMaxLength(50).IsUnicode(false);
+                entity.Property(e => e.PostalCode).HasMaxLength(20).IsUnicode(false);
+                entity.Property(e => e.ImageUrl).HasMaxLength(255).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Patient>(entity =>
+            {
+                entity.Property(e => e.Name).HasMaxLength(50).IsUnicode(false);
+                entity.Property(e => e.Contact).HasMaxLength(20).IsUnicode(false);
+                entity.Property(e => e.Email).HasMaxLength(100).IsUnicode(false);
+                entity.Property(e => e.Address).HasMaxLength(255).IsUnicode(false);
+                entity.Property(e => e.Region).HasMaxLength(50).IsUnicode(false);
+                entity.Property(e => e.Country).HasMaxLength(50).IsUnicode(false);
+                entity.Property(e => e.ImageUrls).HasMaxLength(255).IsUnicode(false);
+                entity.Property(e => e.BloodGroup).HasMaxLength(10).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Appointment>(entity =>
+            {
+                entity.Property(e => e.Purpose).HasMaxLength(255).IsUnicode(false);
+                entity.HasOne(a => a.Doctor)
+                    .WithMany()
+                    .HasForeignKey(a => a.DoctorId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(a => a.Patient)
+                    .WithMany()
+                    .HasForeignKey(a => a.PatientId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             OnModelCreatingPartial(modelBuilder);

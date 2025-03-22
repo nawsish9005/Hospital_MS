@@ -4,6 +4,7 @@ using HMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250322054408_updateappointmentandmedical")]
+    partial class updateappointmentandmedical
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,15 +44,9 @@ namespace HMS.Migrations
 
                     b.Property<string>("Purpose")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientId");
 
                     b.ToTable("Appointments");
                 });
@@ -64,33 +61,23 @@ namespace HMS.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Contact")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -100,15 +87,11 @@ namespace HMS.Migrations
 
                     b.Property<string>("PostalCode")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Region")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Specialization")
                         .IsRequired()
@@ -153,15 +136,14 @@ namespace HMS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Next_Visit_Date")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("Next_Visit_Date")
+                        .HasColumnType("date");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PaymentRecords")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("PaymentRecords")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Therapies")
                         .IsRequired()
@@ -172,8 +154,6 @@ namespace HMS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PatientId");
 
                     b.ToTable("MedicalRecords");
                 });
@@ -188,88 +168,42 @@ namespace HMS.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("BloodGroup")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Contact")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrls")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(255)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Region")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Patients");
-                });
-
-            modelBuilder.Entity("HMS.Models.Appointment", b =>
-                {
-                    b.HasOne("HMS.Models.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HMS.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("HMS.Models.MedicalRecord", b =>
-                {
-                    b.HasOne("HMS.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,6 +4,7 @@ using HMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250322062507_updateappoint")]
+    partial class updateappoint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,15 +156,14 @@ namespace HMS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Next_Visit_Date")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("Next_Visit_Date")
+                        .HasColumnType("date");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
-                    b.Property<string>("PaymentRecords")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("PaymentRecords")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Therapies")
                         .IsRequired()
@@ -172,8 +174,6 @@ namespace HMS.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PatientId");
 
                     b.ToTable("MedicalRecords");
                 });
@@ -257,17 +257,6 @@ namespace HMS.Migrations
                         .IsRequired();
 
                     b.Navigation("Doctor");
-
-                    b.Navigation("Patient");
-                });
-
-            modelBuilder.Entity("HMS.Models.MedicalRecord", b =>
-                {
-                    b.HasOne("HMS.Models.Patient", "Patient")
-                        .WithMany()
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.Navigation("Patient");
                 });
