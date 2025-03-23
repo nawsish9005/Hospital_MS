@@ -34,7 +34,7 @@ namespace HMS.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Doctor>> CreateStudent(Doctor doctor)
+        public async Task<ActionResult<Doctor>> CreateDoctor(Doctor doctor)
         {
             await context.Doctors.AddAsync(doctor);
             await context.SaveChangesAsync();
@@ -42,7 +42,7 @@ namespace HMS.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Doctor>> UpdateStudent(int id, Doctor doctor)
+        public async Task<ActionResult<Doctor>> UpdateDoctor(int id, Doctor doctor)
         {
             if (id != doctor.Id)
             {

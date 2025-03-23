@@ -14,7 +14,7 @@ namespace HMS.Controllers
         {
             _context = context;
         }
-        // GET: api/Appointments
+        // GET: api/Appointment
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Appointment>>> GetAllAppointments()
         {
