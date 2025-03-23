@@ -7,25 +7,128 @@ import { Observable } from 'rxjs';
 })
 export class HmsService {
   private baseUrl = 'https://localhost:7212/api';
+  
   constructor(private http: HttpClient) {}
+  
+  //https://localhost:7212/api/Appointment
 
-  getAll<T>(controller: string): Observable<T[]> {
-    return this.http.get<T[]>(`${this.baseUrl}/${controller}`);
+  public appointmentUrl = "/Appointment";
+
+  public GetAllAppointments(){
+    return this.http.get(this.baseUrl + this.appointmentUrl);
+   }
+
+   public GetAppointmentById(id: number){
+    return this.http.get(this.baseUrl + this.appointmentUrl + "/" + id);
   }
 
-  getById<T>(controller: string, id: number): Observable<T> {
-    return this.http.get<T>(`${this.baseUrl}/${controller}/${id}`);
+  public CreateAppointment(data: any){
+    return this.http.post(this.baseUrl + this.appointmentUrl, data);
+  }
+  
+  public UpdateAppointment(data: any){
+    return this.http.put(this.baseUrl + this.appointmentUrl, data)
+  }
+  
+  public DeleteAppointment(id: number){
+    return this.http.delete(this.baseUrl + this.appointmentUrl + "/" + id);
   }
 
-  create<T>(controller: string, data: T): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}/${controller}`, data);
+
+  //https://localhost:7212/api/Doctor
+  
+  public doctorUrl = "/Doctor";
+
+  public GetDoctor(){
+    return this.http.get(this.baseUrl + this.doctorUrl);
+   }
+
+   public GetDoctorById(id: number){
+    return this.http.get(this.baseUrl + this.doctorUrl + "/" + id);
   }
 
-  update<T>(controller: string, id: number, data: T): Observable<T> {
-    return this.http.put<T>(`${this.baseUrl}/${controller}/${id}`, data);
+  public CreateDoctor(data: any){
+    return this.http.post(this.baseUrl + this.doctorUrl, data);
+  }
+  
+  public UpdateDoctor(data: any){
+    return this.http.put(this.baseUrl + this.doctorUrl, data)
+  }
+  
+  public DeleteDoctor(id: number){
+    return this.http.delete(this.baseUrl + this.doctorUrl + "/" + id);
   }
 
-  delete(controller: string, id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${controller}/${id}`);
+  //https://localhost:7212/api/Prescription
+  
+  public prescriptionUrl = "/Prescription";
+
+  public GetAllPrescriptions(){
+    return this.http.get(this.baseUrl + this.prescriptionUrl);
+   }
+
+   public GetPrescriptionById(id: number){
+    return this.http.get(this.baseUrl + this.prescriptionUrl + "/" + id);
   }
+
+  public CreatePrescription(data: any){
+    return this.http.post(this.baseUrl + this.prescriptionUrl, data);
+  }
+  
+  public UpdatePrescription(data: any){
+    return this.http.put(this.baseUrl + this.prescriptionUrl, data)
+  }
+  
+  public DeletePrescription(id: number){
+    return this.http.delete(this.baseUrl + this.prescriptionUrl + "/" + id);
+  }
+
+  //https://localhost:7212/api/MedicalRecord
+  
+  public medicalRecordUrl = "/MedicalRecord";
+
+  public GetAllMedicalRecords(){
+    return this.http.get(this.baseUrl + this.medicalRecordUrl);
+   }
+
+   public GetMedicalRecordById(id: number){
+    return this.http.get(this.baseUrl + this.medicalRecordUrl + "/" + id);
+  }
+
+  public CreateMedicalRecord(data: any){
+    return this.http.post(this.baseUrl + this.medicalRecordUrl, data);
+  }
+  
+  public UpdateMedicalRecord(data: any){
+    return this.http.put(this.baseUrl + this.medicalRecordUrl, data)
+  }
+  
+  public DeleteMedicalRecord(id: number){
+    return this.http.delete(this.baseUrl + this.medicalRecordUrl + "/" + id);
+  }
+
+  //https://localhost:7212/api/Patient
+  
+  public patientUrl = "/Patient";
+
+  public GetPatient(){
+    return this.http.get(this.baseUrl + this.patientUrl);
+   }
+
+   public GetPatientById(id: number){
+    return this.http.get(this.baseUrl + this.patientUrl + "/" + id);
+  }
+
+  public CreatePatient(data: any){
+    return this.http.post(this.baseUrl + this.patientUrl, data);
+  }
+  
+  public UpdatePatient(data: any){
+    return this.http.put(this.baseUrl + this.patientUrl, data)
+  }
+  
+  public DeletePatient(id: number){
+    return this.http.delete(this.baseUrl + this.patientUrl + "/" + id);
+  }
+
 }
