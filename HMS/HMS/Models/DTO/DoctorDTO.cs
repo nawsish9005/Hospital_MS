@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-
-namespace HMS.Models
+﻿namespace HMS.Models.DTO
 {
-    public class Doctor
+    public class DoctorDTO
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Contact { get; set; }
         public string Email { get; set; }
@@ -13,7 +10,5 @@ namespace HMS.Models
         public string Country { get; set; }
         public string PostalCode { get; set; }
         public string Specialization { get; set; }
-        public string ImageUrl { get; set; }
     }
-
 }

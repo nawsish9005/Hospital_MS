@@ -141,3 +141,6 @@ E:\filessss\Hospital_MS\HMS\HMS\obj\Debug\net8.0\refint\HMS.dll
 E:\filessss\Hospital_MS\HMS\HMS\obj\Debug\net8.0\HMS.pdb
 E:\filessss\Hospital_MS\HMS\HMS\obj\Debug\net8.0\HMS.genruntimeconfig.cache
 E:\filessss\Hospital_MS\HMS\HMS\obj\Debug\net8.0\ref\HMS.dll
+E:\filessss\Hospital_MS\HMS\HMS\bin\Debug\net8.0\HMS.xml
+E:\filessss\Hospital_MS\HMS\HMS\obj\Debug\net8.0\HMS.xml
+E:\filessss\Hospital_MS\HMS\HMS\bin\Debug\net8.0\HMS.staticwebassets.runtime.json

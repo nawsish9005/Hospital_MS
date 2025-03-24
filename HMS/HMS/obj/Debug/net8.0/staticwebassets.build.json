@@ -1,11 +1,19 @@
 {
   "Version": 1,
-  "Hash": "ZtzxVmL+DYj2kFXH0NcU0EVsowLXUH8EIkR4liHYIug=",
+  "Hash": "pZ54ap0Zlq/q8q6q26/BC4Vmyx7c0fyT4vqEXVSRvUw=",
   "Source": "HMS",
   "BasePath": "_content/HMS",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "HMS\\wwwroot",
+      "Source": "HMS",
+      "ContentRoot": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\",
+      "BasePath": "_content/HMS",
+      "Pattern": "**"
+    }
+  ],
   "Assets": []
 }

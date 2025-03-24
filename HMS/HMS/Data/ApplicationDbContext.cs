@@ -18,6 +18,7 @@ namespace HMS.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Doctor>(entity =>
             {
                 entity.Property(e => e.Name).HasMaxLength(50).IsUnicode(false);
