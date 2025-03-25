@@ -13,6 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { DoctorListComponent } from './frontEnd/doctor-list/doctor-list.component';
 import { NavbarComponent } from './frontEnd/navbar/navbar.component';
 import { PreloaderComponent } from './frontEnd/preloader/preloader.component';
+import { FooterComponent } from './frontEnd/footer/footer.component';
+import { HeaderComponent } from './frontEnd/header/header.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { PreloaderComponent } from './frontEnd/preloader/preloader.component';
     DoctorListComponent,
     NavbarComponent,
     PreloaderComponent,
+    FooterComponent,
+    HeaderComponent,
   ],
   imports: [
     BrowserModule,
