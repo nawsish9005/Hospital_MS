@@ -47,13 +47,13 @@ export class HmsService {
     return this.http.get(this.baseUrl + this.doctorUrl + "/" + id);
   }
 
-  public CreateDoctor(data: any){
-    return this.http.post(this.baseUrl + this.doctorUrl, data);
+  public CreateDoctor(data: FormData): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}${this.doctorUrl}`, data);
   }
   
-  public UpdateDoctor(data: any){
-    return this.http.put(this.baseUrl + this.doctorUrl, data)
-  }
+  public UpdateDoctor(id: number, data: FormData): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}${this.doctorUrl}/${id}`, data);
+}
   
   public DeleteDoctor(id: number){
     return this.http.delete(this.baseUrl + this.doctorUrl + "/" + id);

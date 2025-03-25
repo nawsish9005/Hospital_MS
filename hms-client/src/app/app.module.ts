@@ -9,6 +9,10 @@ import { PatientComponent } from './patient/patient.component';
 import { PrescriptionComponent } from './prescription/prescription.component';
 import { MedicalRecordComponent } from './medical-record/medical-record.component';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { DoctorListComponent } from './frontEnd/doctor-list/doctor-list.component';
+import { NavbarComponent } from './frontEnd/navbar/navbar.component';
+import { PreloaderComponent } from './frontEnd/preloader/preloader.component';
 
 @NgModule({
   declarations: [
@@ -17,12 +21,16 @@ import { FormsModule } from '@angular/forms';
     DoctorComponent,
     PatientComponent,
     PrescriptionComponent,
-    MedicalRecordComponent
+    MedicalRecordComponent,
+    DoctorListComponent,
+    NavbarComponent,
+    PreloaderComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

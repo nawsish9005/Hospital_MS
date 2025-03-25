@@ -1,0 +1,61 @@
+<div class="doctor-list-container">
+    <h2>Doctor Management</h2>
+    
+    <div class="controls">
+      <div class="search-box">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search doctors..." />
+      </div>
+      <a routerLink="/doctors/new" class="add-button">Add New Doctor</a>
+    </div>
+  
+    <div *ngIf="isLoading" class="loading">Loading doctors...</div>
+    
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+  
+    <div *ngIf="!isLoading && !errorMessage">
+      <div *ngIf="filteredDoctors.length === 0" class="no-results">
+        No doctors found.
+      </div>
+  
+      <table *ngIf="filteredDoctors.length > 0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Specialization</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let doctor of paginatedDoctors">
+            <td>{{ doctor.id }}</td>
+            <td>
+              <img *ngIf="doctor.imageUrl" [src]="doctor.imageUrl" alt="{{ doctor.name }}" class="doctor-image" />
+            </td>
+            <td>{{ doctor.name }}</td>
+            <td>{{ doctor.specialization }}</td>
+            <td>{{ doctor.contact }}</td>
+            <td>{{ doctor.email }}</td>
+            <td class="actions">
+              <a [routerLink]="['/doctors/edit', doctor.id]" class="edit-button">Edit</a>
+              <button (click)="deleteDoctor(doctor.id)" class="delete-button">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <div *ngIf="totalPages > 1" class="pagination">
+        <button 
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          (click)="onPageChange(i + 1)"
+          [class.active]="currentPage === i + 1">
+          {{ i + 1 }}
+        </button>
+      </div>
+    </div>
+  </div>

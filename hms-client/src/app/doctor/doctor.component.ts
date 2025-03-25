@@ -20,6 +20,7 @@ export class DoctorComponent implements OnInit {
     specialization: ''
   };
 
+  selectedFile: File | null = null;
   doctors: any[] = [];
   isEditMode: boolean = false;
 
@@ -30,25 +31,61 @@ export class DoctorComponent implements OnInit {
   }
 
   getDoctors(): void {
-    this.hmsService.GetDoctor().subscribe(data => {
-      this.doctors = data as any[];
-    });
+    this.hmsService.GetDoctor().subscribe(
+      data => {
+        this.doctors = data as any[];
+      },
+      error => {
+        console.error('Error fetching doctors:', error);
+        alert('Error fetching doctor list!');
+      }
+    );
   }
 
   getDoctorById(id: number): void {
-    this.hmsService.GetDoctorById(id).subscribe(data => {
-      this.doctor = { ...data } as any;
-      this.isEditMode = true;
-    });
+    this.hmsService.GetDoctorById(id).subscribe(
+      data => {
+        this.doctor = { ...data } as any;
+        this.isEditMode = true;
+      },
+      error => {
+        console.error('Error fetching doctor:', error);
+        alert('Error fetching doctor details!');
+      }
+    );
+  }
+
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
   }
 
   createDoctor(): void {
-    this.hmsService.CreateDoctor(this.doctor).subscribe(response => {
-      console.log('Doctor added:', response);
-      alert('Doctor added successfully!');
-      this.resetForm();
-      this.getDoctors();
-    });
+    const formData = new FormData();
+    formData.append('name', this.doctor.name);
+    formData.append('contact', this.doctor.contact);
+    formData.append('email', this.doctor.email);
+    formData.append('address', this.doctor.address);
+    formData.append('region', this.doctor.region || '');
+    formData.append('country', this.doctor.country);
+    formData.append('postalCode', this.doctor.postalCode || '');
+    formData.append('specialization', this.doctor.specialization);
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+
+    this.hmsService.CreateDoctor(formData).subscribe(
+      response => {
+        console.log('Doctor added:', response);
+        alert('Doctor added successfully!');
+        this.resetForm();
+        this.getDoctors();
+      },
+      error => {
+        console.error('Error adding doctor:', error);
+        alert('Failed to add doctor. Please check your inputs.');
+      }
+    );
   }
 
   updateDoctor(): void {
@@ -56,22 +93,49 @@ export class DoctorComponent implements OnInit {
       alert('Invalid Doctor ID');
       return;
     }
-    
-    this.hmsService.UpdateDoctor(this.doctor.id).subscribe(() => {
-      console.log('Doctor updated successfully!');
-      alert('Doctor updated successfully!');
-      this.resetForm();
-      this.getDoctors();
-    });
+
+    const formData = new FormData();
+    formData.append('id', this.doctor.id.toString());
+    formData.append('name', this.doctor.name);
+    formData.append('contact', this.doctor.contact);
+    formData.append('email', this.doctor.email);
+    formData.append('address', this.doctor.address);
+    formData.append('region', this.doctor.region || '');
+    formData.append('country', this.doctor.country);
+    formData.append('postalCode', this.doctor.postalCode || '');
+    formData.append('specialization', this.doctor.specialization);
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+
+    this.hmsService.UpdateDoctor(this.doctor.id, formData).subscribe(
+      () => {
+        console.log('Doctor updated successfully!');
+        alert('Doctor updated successfully!');
+        this.resetForm();
+        this.getDoctors();
+      },
+      error => {
+        console.error('Error updating doctor:', error);
+        alert('Failed to update doctor.');
+      }
+    );
   }
 
   deleteDoctor(id: number): void {
     if (confirm('Are you sure you want to delete this doctor?')) {
-      this.hmsService.DeleteDoctor(id).subscribe(() => {
-        console.log('Doctor deleted successfully!');
-        alert('Doctor deleted successfully!');
-        this.getDoctors();
-      });
+      this.hmsService.DeleteDoctor(id).subscribe(
+        () => {
+          console.log('Doctor deleted successfully!');
+          alert('Doctor deleted successfully!');
+          this.getDoctors();
+        },
+        error => {
+          console.error('Error deleting doctor:', error);
+          alert('Failed to delete doctor.');
+        }
+      );
     }
   }
 
@@ -96,6 +160,7 @@ export class DoctorComponent implements OnInit {
       imageUrl: '',
       specialization: ''
     };
+    this.selectedFile = null;
     this.isEditMode = false;
   }
 }
