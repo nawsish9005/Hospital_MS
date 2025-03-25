@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DoctorListComponent } from './frontEnd/doctor-list/doctor-list.component';
 import { DoctorComponent } from './doctor/doctor.component';
 import { NavbarComponent } from './frontEnd/navbar/navbar.component';
+import { FooterComponent } from './frontEnd/footer/footer.component';
 
 const routes: Routes = [
   { path: '', title:'Doctor Submit', component: NavbarComponent},
