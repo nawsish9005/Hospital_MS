@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\doctor\" />
+    <Folder Include="wwwroot\images\patient\" />
   </ItemGroup>
 
 </Project>

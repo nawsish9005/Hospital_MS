@@ -1,5 +1,6 @@
 ﻿using HMS.Data;
 using HMS.Models;
+using HMS.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,35 +11,76 @@ namespace HMS.Controllers
     public class PatientController : Controller
     {
         private readonly ApplicationDbContext context;
+        private readonly IWebHostEnvironment env;
 
-        public PatientController(ApplicationDbContext context)
+        public PatientController(ApplicationDbContext context, IWebHostEnvironment env)
         {
             this.context = context;
+            this.env = env;
         }
+        // Get All Doctors
         [HttpGet]
-        public async Task<ActionResult<List<Patient>>> GetPatient()
+        public async Task<IActionResult> GetPatients()
         {
-            var data = await context.Patients.ToListAsync();
-            return Ok(data);
+            var patients = await context.Patients.ToListAsync();
+            return Ok(patients);
         }
 
+        // Get Doctor by ID
         [HttpGet("{id}")]
-        public async Task<ActionResult<Patient>> GetPatientById(int id)
+        public async Task<IActionResult> GetPatient(int id)
         {
-            var std = await context.Patients.FindAsync(id);
-            if (std == null)
-            {
+            var patient = await context.Patients.FindAsync(id);
+            if (patient == null)
                 return NotFound();
-            }
-            return Ok(std);
+
+            return Ok(patient);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Patient>> CreatePatient(Patient patient)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> CreatePatient([FromForm] PatientDTO patientDto, [FromForm] IFormFile? image)
         {
-            await context.Patients.AddAsync(patient);
-            await context.SaveChangesAsync();
-            return Ok(patient);
+            try
+            {
+                var patient = new Patient
+                {
+                    Name = patientDto.Name,
+                    Contact = patientDto.Contact,
+                    Email = patientDto.Email,
+                    Address = patientDto.Address,
+                    Region = patientDto.Region,
+                    Country = patientDto.Country,
+                    BloodGroup = patientDto.BloodGroup,
+                    DateOfBirth = patientDto.DateOfBirth
+                };
+
+                if (image != null)
+                {
+                    var uploadsDir = Path.Combine(env.WebRootPath, "images", "patient");
+                    if (!Directory.Exists(uploadsDir))
+                    {
+                        Directory.CreateDirectory(uploadsDir);
+                    }
+
+                    var filePath = Path.Combine(uploadsDir, image.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    patient.ImageUrls = "/images/patient/" + image.FileName;
+                }
+
+                context.Patients.Add(patient);
+                await context.SaveChangesAsync();
+
+                return CreatedAtAction(nameof(GetPatient), new { id = patient.Id }, patient);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]

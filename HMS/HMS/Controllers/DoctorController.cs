@@ -18,22 +18,24 @@ namespace HMS.Controllers
             this.context = context;
             this.env = env;
         }
+
+        // Get All Doctors
         [HttpGet]
-        public async Task<ActionResult<List<Doctor>>> GetDoctor()
+        public async Task<IActionResult> GetDoctors()
         {
-            var data = await context.Doctors.ToListAsync();
-            return Ok(data);
+            var doctors = await context.Doctors.ToListAsync();
+            return Ok(doctors);
         }
 
+        // Get Doctor by ID
         [HttpGet("{id}")]
-        public async Task<ActionResult<Doctor>> GetDoctorById(int id)
+        public async Task<IActionResult> GetDoctor(int id)
         {
-            var std = await context.Doctors.FindAsync(id);
-            if (std == null)
-            {
+            var doctor = await context.Doctors.FindAsync(id);
+            if (doctor == null)
                 return NotFound();
-            }
-            return Ok(std);
+
+            return Ok(doctor);
         }
 
         //[HttpPost]
@@ -91,31 +93,41 @@ namespace HMS.Controllers
         }
 
 
+        // Update Doctor
         [HttpPut("{id}")]
-        public async Task<ActionResult<Doctor>> UpdateDoctor(int id, Doctor doctor)
+        public async Task<IActionResult> UpdateDoctor(int id, [FromBody] Doctor doctor)
         {
             if (id != doctor.Id)
-            {
-                return BadRequest();
-            }
-            context.Entry(doctor).State = EntityState.Modified;
-            await context.SaveChangesAsync();
-            return Ok(doctor);
+                return BadRequest("Doctor ID mismatch");
 
+            context.Entry(doctor).State = EntityState.Modified;
+
+            try
+            {
+                await context.SaveChangesAsync();
+                return Ok(doctor);
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!context.Doctors.Any(d => d.Id == id))
+                    return NotFound();
+                else
+                    throw;
+            }
         }
 
+        // Delete Doctor
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Doctor>> DeleteDoctor(int id)
+        public async Task<IActionResult> DeleteDoctor(int id)
         {
-            var doc = await context.Doctors.FindAsync(id);
-            if (doc == null)
-            {
+            var doctor = await context.Doctors.FindAsync(id);
+            if (doctor == null)
                 return NotFound();
-            }
-            context.Doctors.Remove(doc);
-            await context.SaveChangesAsync();
-            return Ok();
 
+            context.Doctors.Remove(doctor);
+            await context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
