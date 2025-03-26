@@ -11,10 +11,10 @@ import { MedicalRecordComponent } from './medical-record/medical-record.componen
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { DoctorListComponent } from './frontEnd/doctor-list/doctor-list.component';
-import { NavbarComponent } from './frontEnd/navbar/navbar.component';
 import { PreloaderComponent } from './frontEnd/preloader/preloader.component';
 import { FooterComponent } from './frontEnd/footer/footer.component';
 import { HeaderComponent } from './frontEnd/header/header.component';
+import { NavbarComponent } from './frontEnd/navbar/navbar.component';
 
 @NgModule({
   declarations: [

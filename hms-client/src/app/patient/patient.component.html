@@ -1,1 +1,112 @@
-<p>patient works!</p>
+<section class="book_section layout_padding">
+    <div class="">
+      <div class="row">
+        <div class="col-md-12">
+          <form #patientForm="ngForm" (ngSubmit)="onSubmit()" id="patientForm" enctype="multipart/form-data">
+            <h4>
+              New <span>Patient</span>
+            </h4>
+            <div class="form-row ">
+              <div class="form-group col-lg-4">
+                <label for="name">Patient Name</label>
+                <input type="text" id="name" [(ngModel)]="patient.name" name="name" required />
+              </div>
+              <div class="form-group col-lg-4">
+                <label for="contact">Contact:</label>
+                <input type="text" id="contact" [(ngModel)]="patient.contact" name="contact" required />
+              </div>
+              <div class="form-group col-lg-4">
+                <label for="email">Email:</label>
+                <input type="email" id="email" [(ngModel)]="patient.email" name="email" required />
+              </div>
+            </div>
+            <div class="form-row ">
+              <div class="form-group col-lg-4">
+                <label for="dateOfBirth">Date of Birth</label>
+                <input type="date" id="dateOfBirth" [(ngModel)]="patient.dateOfBirth" name="dateOfBirth" required />
+              </div>
+              <div class="form-group col-lg-4">
+                <label for="bloodGroup">Blood Group:</label>
+                <input type="text" id="bloodGroup" [(ngModel)]="patient.bloodGroup" name="bloodGroup" required />
+              </div>
+              <div class="form-group col-lg-4">
+                <label for="address">Address</label>
+                <input type="text" id="address" [(ngModel)]="patient.address" name="address" required />
+              </div>
+            </div>
+            <div class="form-row ">
+              <div class="form-group col-lg-4">
+                <label for="region">Region:</label>
+                <input type="text" id="region" [(ngModel)]="patient.region" name="region" />
+              </div>
+              <div class="form-group col-lg-4">
+                <label for="country">Country:</label>
+                <input type="text" id="country" [(ngModel)]="patient.country" name="country" required />
+              </div>
+              <div class="form-group col-lg-4">
+                <label for="imageUrls">Image:</label>
+                <input type="file" id="imageUrls" (change)="onFileSelected($event)" name="imageUrls" />
+              </div>
+            </div>
+            <div class="btn-box d-flex justify-content-center">
+              <button type="submit" style="width: 380px;" class="btn">Submit Now</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="book_section layout_padding">
+    <div class="">
+      <div class="row">
+        <div class="col-md-12">
+          <h4 class="d-flex justify-content-center">
+            <span>Patient List</span>
+          </h4>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th>#</th>
+                  <th>Patient Name</th>
+                  <th>Contact</th>
+                  <th>Email</th>
+                  <th>Date of Birth</th>
+                  <th>Blood Group</th>
+                  <th>Address</th>
+                  <th>Region</th>
+                  <th>Country</th>
+                  <th>Image</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let patient of patients; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ patient.name }}</td>
+                  <td>{{ patient.contact }}</td>
+                  <td>{{ patient.email }}</td>
+                  <td>{{ patient.dateOfBirth | date }}</td>
+                  <td>{{ patient.bloodGroup }}</td>
+                  <td>{{ patient.address }}</td>
+                  <td>{{ patient.region }}</td>
+                  <td>{{ patient.country }}</td>
+                  <td>
+                    <img *ngIf="patient.imageUrls" [src]="patient.imageUrls" alt="Patient Image" width="50" height="50">
+                  </td>
+                  <td>
+                    <button class="btn btn-warning btn-sm">Edit</button>
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                  </td>
+                </tr>
+                <tr *ngIf="patients.length === 0">
+                  <td colspan="11" class="text-center">No patients found</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

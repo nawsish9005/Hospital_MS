@@ -123,7 +123,7 @@ export class HmsService {
     return this.http.post(this.baseUrl + this.patientUrl, data);
   }
   
-  public UpdatePatient(data: any){
+  public UpdatePatient(data: any, formData: FormData){
     return this.http.put(this.baseUrl + this.patientUrl, data)
   }
   
