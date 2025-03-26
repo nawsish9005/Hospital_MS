@@ -6,7 +6,7 @@ import { NavbarComponent } from './frontEnd/navbar/navbar.component';
 import { FooterComponent } from './frontEnd/footer/footer.component';
 
 const routes: Routes = [
-  { path: '', title:'Doctor Submit', component: NavbarComponent},
+  { path: '', title:'DoctorHome', component: NavbarComponent},
   { path: 'doctor', title:'Doctor Submit', component: DoctorComponent},
   { path: 'doctor-list',title:'Doctor List', component: DoctorListComponent }
 ];

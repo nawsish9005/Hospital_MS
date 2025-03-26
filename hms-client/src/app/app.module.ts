@@ -28,7 +28,7 @@ import { HeaderComponent } from './frontEnd/header/header.component';
     NavbarComponent,
     PreloaderComponent,
     FooterComponent,
-    HeaderComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
