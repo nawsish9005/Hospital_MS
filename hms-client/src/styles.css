@@ -127,7 +127,82 @@ body {
    visibility: hidden;
   }
   
+/* Doctor Form Styling */
+.doctor-form-section {
+  padding: 3rem 0;
+  background-color: #f8f9fa;
+}
 
+.form-card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.card-header h3 {
+  font-weight: 600;
+}
+
+.card-header span {
+  color: #ffc107;
+}
+
+.card-body {
+  padding: 2.5rem;
+}
+
+.form-floating label {
+  color: black;
+  font-weight: 500;
+}
+
+.form-control {
+  height: 50px;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+  border-color: black;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.invalid-feedback {
+  font-size: 0.85rem;
+}
+
+.btnControl {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.btnControl:hover {
+  background-color: black;
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .form-control {
+    height: 45px;
+  }
+}
 
   /* Add to your component's CSS or global styles */
 .navbar-toggler {

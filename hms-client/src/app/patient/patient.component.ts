@@ -7,17 +7,17 @@ import { HmsService } from '../services/hms.service';
   styleUrls: ['./patient.component.css']
 })
 export class PatientComponent implements OnInit {
-  patient = {
+  patient = {  
     id: 0,
     name: '',
     contact: '',
-    dateOfBirth: '',
+    dateofBirth:'',
     bloodGroup: '',
+    email: '',
     address: '',
     region: '',
     country: '',
-    email: '',
-    imageUrls: ''
+    imageUrl: ''
   };
 
   selectedFile: File | null = null;
@@ -36,21 +36,21 @@ export class PatientComponent implements OnInit {
         this.patients = data as any[];
       },
       error => {
-        console.error('Error fetching patients:', error);
-        alert('Error fetching patient list!');
+        console.error('Error fetching doctors:', error);
+        alert('Error fetching doctor list!');
       }
     );
   }
 
-  getPatientById(id: number): void {
-    this.hmsService.GetPatientById(id).subscribe(
+  getDoctorById(id: number): void {
+    this.hmsService.GetDoctorById(id).subscribe(
       data => {
         this.patient = { ...data } as any;
         this.isEditMode = true;
       },
       error => {
-        console.error('Error fetching patient:', error);
-        alert('Error fetching patient details!');
+        console.error('Error fetching doctor:', error);
+        alert('Error fetching doctor details!');
       }
     );
   }
@@ -63,18 +63,18 @@ export class PatientComponent implements OnInit {
     const formData = new FormData();
     formData.append('name', this.patient.name);
     formData.append('contact', this.patient.contact);
-    formData.append('dateOfBirth', this.patient.dateOfBirth);
-    formData.append('bloodGroup', this.patient.bloodGroup);
+    formData.append('email', this.patient.email);
     formData.append('address', this.patient.address);
     formData.append('region', this.patient.region || '');
     formData.append('country', this.patient.country);
-    formData.append('email', this.patient.email);
+    formData.append('postalCode', this.patient.bloodGroup || '');
+    formData.append('specialization', this.patient.dateofBirth);
 
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
 
-    this.hmsService.CreatePatient(formData).subscribe(
+    this.hmsService.CreateDoctor(formData).subscribe(
       response => {
         console.log('Patient added:', response);
         alert('Patient added successfully!');
@@ -98,12 +98,12 @@ export class PatientComponent implements OnInit {
     formData.append('id', this.patient.id.toString());
     formData.append('name', this.patient.name);
     formData.append('contact', this.patient.contact);
-    formData.append('dateOfBirth', this.patient.dateOfBirth);
-    formData.append('bloodGroup', this.patient.bloodGroup);
+    formData.append('email', this.patient.email);
     formData.append('address', this.patient.address);
     formData.append('region', this.patient.region || '');
     formData.append('country', this.patient.country);
-    formData.append('email', this.patient.email);
+    formData.append('bloodGroup', this.patient.bloodGroup || '');
+    formData.append('dateofBirth', this.patient.dateofBirth);
 
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
@@ -152,13 +152,13 @@ export class PatientComponent implements OnInit {
       id: 0,
       name: '',
       contact: '',
-      dateOfBirth: '',
-      bloodGroup: '',
+      email: '',
       address: '',
       region: '',
       country: '',
-      email: '',
-      imageUrls: ''
+      dateofBirth: '',
+      imageUrl: '',
+      bloodGroup: ''
     };
     this.selectedFile = null;
     this.isEditMode = false;
