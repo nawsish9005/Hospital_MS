@@ -99,7 +99,7 @@ export class HmsService {
     return this.http.post(this.baseUrl + this.medicalRecordUrl, data);
   }
   
-  public UpdateMedicalRecord(data: any){
+  public UpdateMedicalRecord(data: any, formData: FormData){
     return this.http.put(this.baseUrl + this.medicalRecordUrl, data)
   }
   

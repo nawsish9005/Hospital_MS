@@ -11,6 +11,7 @@ import { DoctorComponent } from './doctor/doctor.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PreloaderComponent } from './frontEnd/preloader/preloader.component';
+import { MedicalRecordsComponent } from './medical-records/medical-records.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { PreloaderComponent } from './frontEnd/preloader/preloader.component';
     PatientListComponent,
     PatientComponent,
     DoctorComponent,
-    PreloaderComponent
+    PreloaderComponent,
+    MedicalRecordsComponent
   ],
   imports: [
     BrowserModule,
