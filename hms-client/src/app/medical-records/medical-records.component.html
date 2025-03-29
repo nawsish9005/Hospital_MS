@@ -1,114 +1,154 @@
 <section class="medical-record-form-section">
     <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-10">
-          <div class="card form-card">
-            <div class="card-header bg-primary text-white">
-              <h3 class="mb-0">New <span>Medical Record Entry</span></h3>
-            </div>
-            <div class="card-body">
-              <form #medicalRecordForm="ngForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="needs-validation" novalidate>
-                <div class="row mb-4">
-                  <div class="col-md-4 mb-3">
-                    <div class="form-floating">
-                      <input type="number" class="form-control" id="patientId" [(ngModel)]="medicalRecord.patientId" name="patientId" placeholder="Patient ID" required>
-                      <label for="patientId">Patient ID</label>
-                      <div class="invalid-feedback">Please provide Patient ID</div>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card form-card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">New <span>Medical Record Entry</span></h3>
                     </div>
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <div class="form-floating">
-                      <input type="text" class="form-control" id="diagnosis" [(ngModel)]="medicalRecord.diagnosis" name="diagnosis" placeholder="Diagnosis" required>
-                      <label for="diagnosis">Diagnosis</label>
-                      <div class="invalid-feedback">Please provide diagnosis</div>
-                    </div>
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <div class="form-floating">
-                      <input type="text" class="form-control" id="treatment" [(ngModel)]="medicalRecord.treatment" name="treatment" placeholder="Treatment" required>
-                      <label for="treatment">Treatment</label>
-                      <div class="invalid-feedback">Please provide treatment details</div>
-                    </div>
-                  </div>
-                </div>
-                <div class="row mb-4">
+                    <div class="card-body">
+                        <form #medicalRecordForm="ngForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="needs-validation" novalidate>
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <select class="form-control" id="patientId" [(ngModel)]="medicalRecord.patientId" name="patientId" required>
+                                            <option value="">Select Patient</option>
+                                            <option *ngFor="let patient of patients" [value]="patient.id">
+                                                {{ patient.name }} (ID: {{ patient.id }})
+                                            </option>
+                                        </select>
+                                        <label for="patientId">Patient</label>
+                                        <div class="invalid-feedback">Please select a valid patient</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="diagnosis" [(ngModel)]="medicalRecord.diagnosis" name="diagnosis" placeholder="Diagnosis" required>
+                                        <label for="diagnosis">Diagnosis</label>
+                                        <div class="invalid-feedback">Please provide a diagnosis</div>
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div class="col-md-4 mb-3">
-                        <div class="form-floating">
-                          <input type="text" class="form-control" id="currentMedications" 
-                          [(ngModel)]="medicalRecord.currentMedications" name="currentMedications"
-                           placeholder="Current Medications" required>
-                          <label for="currentMedications">Current Medications</label>
-                          <div class="invalid-feedback">Please provide Current Medications details</div>
-                        </div>
-                      </div>
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="treatment" [(ngModel)]="medicalRecord.treatment" name="treatment" placeholder="Treatment" required>
+                                        <label for="treatment">Treatment</label>
+                                        <div class="invalid-feedback">Please provide treatment details</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="currentMedications" [(ngModel)]="medicalRecord.currentMedications" name="currentMedications" placeholder="Current Medications">
+                                        <label for="currentMedications">Current Medications</label>
+                                    </div>
+                                </div>
+                            </div>
 
-                  <div class="col-md-4 mb-3">
-                    <div class="form-floating">
-                      <input type="date" class="form-control" id="nextVisitDate" [(ngModel)]="medicalRecord.nextVisitDate" name="nextVisitDate">
-                      <label for="nextVisitDate">Next Visit Date</label>
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" id="consultationNotes" [(ngModel)]="medicalRecord.consultationNotes" name="consultationNotes" placeholder="Consultation Notes"></textarea>
+                                        <label for="consultationNotes">Consultation Notes</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" id="followUpNotes" [(ngModel)]="medicalRecord.followUpNotes" name="followUpNotes" placeholder="Follow-Up Notes"></textarea>
+                                        <label for="followUpNotes">Follow-Up Notes</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" id="laboratoryResults" [(ngModel)]="medicalRecord.laboratoryResults" name="laboratoryResults" placeholder="Laboratory Results"></textarea>
+                                        <label for="laboratoryResults">Laboratory Results</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" id="therapies" [(ngModel)]="medicalRecord.therapies" name="therapies" placeholder="Therapies"></textarea>
+                                        <label for="therapies">Therapies</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <input type="date" class="form-control" id="nextVisitDate" [(ngModel)]="medicalRecord.nextVisitDate" name="nextVisitDate" required>
+                                        <label for="nextVisitDate">Next Visit Date</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" id="paymentRecords" [(ngModel)]="medicalRecord.paymentRecords" name="paymentRecords" placeholder="Payment Records"></textarea>
+                                        <label for="paymentRecords">Payment Records</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3">
+                                    <label for="imageUrls" class="">Upload Medical Images</label>
+                                    <input class="form-control" type="file" id="imageUrls" (change)="onFileSelected($event)" name="imageUrls" multiple>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 text-center">
+                                <button type="submit" class="btnControl btn-lg">
+                                    <i class="bi bi-send-fill me-2"></i> Save Medical Record
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <label for="imageUpload" class="">Medical Images</label>
-                    <input class="form-control" type="file" id="imageUpload" (change)="onFilesSelected($event)" name="imageUpload" multiple>
-                  </div>
                 </div>
-                <div class="mt-4 text-center">
-                  <button type="submit" class="btnControl btn-lg">
-                    <i class="bi bi-save-fill me-2"></i> Save Medical Record
-                  </button>
-                </div>
-              </form>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </section>
-  
-  <section class="book_section layout_padding">
+</section>
+
+<section class="record_section layout_padding">
     <div class="">
-      <div class="row">
-        <div class="col-md-12">
-          <h4 class="d-flex justify-content-center">
-            <span>Medical Records List</span>
-          </h4>
-          <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-              <thead class="thead-dark">
-                <tr>
-                  <th>#</th>
-                  <th>Patient ID</th>
-                  <th>Diagnosis</th>
-                  <th>Treatment</th>
-                  <th>Next Visit Date</th>
-                  <th>Images</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let record of medicalRecords; let i = index">
-                  <td>{{ i + 1 }}</td>
-                  <td>{{ record.patientId }}</td>
-                  <td>{{ record.diagnosis }}</td>
-                  <td>{{ record.treatment }}</td>
-                  <td>{{ record.nextVisitDate }}</td>
-                  <td>
-                    <img *ngIf="record.imageUrls" [src]="record.imageUrls" alt="Medical Record Image" width="50" height="50">
-                  </td>
-                  <td>
-                    <button class="btn btn-warning btn-sm" (click)="getMedicalRecordById(record.id)">Edit</button>
-                    <button class="btn btn-danger btn-sm" (click)="deleteMedicalRecord(record.id)">Delete</button>
-                  </td>
-                </tr>
-                <tr *ngIf="medicalRecords.length === 0">
-                  <td colspan="7" class="text-center">No medical records found</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="d-flex justify-content-center">
+                    <span>Medical Records List</span>
+                </h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>#</th>
+                                <th>Patient ID</th>
+                                <th>Diagnosis</th>
+                                <th>Treatment</th>
+                                <th>Next Visit</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let record of medicalRecords; let i = index">
+                                <td>{{ i + 1 }}</td>
+                                <td>{{ record.patientId }}</td>
+                                <td>{{ record.diagnosis }}</td>
+                                <td>{{ record.treatment }}</td>
+                                <td>{{ record.nextVisitDate }}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" (click)="editRecord(record)">Edit</button>
+                                    <button class="btn btn-danger btn-sm" (click)="deleteRecord(record.id)">Delete</button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="medicalRecords.length === 0">
+                                <td colspan="6" class="text-center">No medical records found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </section>
+</section>

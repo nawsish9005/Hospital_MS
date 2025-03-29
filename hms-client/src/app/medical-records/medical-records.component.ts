@@ -21,7 +21,7 @@ export class MedicalRecordsComponent implements OnInit {
     paymentRecords: '',
     imageUrls: ''
   };
-
+  patients: any[] = [];
   selectedFiles: File[] = [];
   medicalRecords: any[] = [];
   isEditMode: boolean = false;
@@ -32,6 +32,12 @@ export class MedicalRecordsComponent implements OnInit {
     this.getAllMedicalRecords();
   }
 
+  onFileSelected(event: any): void {
+    if (event.target.files.length > 0) {
+      this.selectedFiles = event.target.files[0];
+    }
+  }
+  
   getAllMedicalRecords(): void {
     this.hmsService.GetAllMedicalRecords().subscribe(
       data => {
@@ -148,6 +154,39 @@ export class MedicalRecordsComponent implements OnInit {
       );
     }
   }
+
+  getPatients(): void {
+    this.hmsService.GetPatient().subscribe(
+      (data: any[]) => {
+        this.patients = data;
+      },
+      error => {
+        console.error('Error fetching patients:', error);
+        alert('Error fetching patient list!');
+      }
+    );
+  }
+
+  editRecord(record: any): void {
+    this.medicalRecord = { ...record };
+    this.isEditMode = true;
+  }
+
+  deleteRecord(id: number): void {
+    if (confirm('Are you sure you want to delete this record?')) {
+      this.hmsService.DeleteMedicalRecord(id).subscribe(
+        () => {
+          alert('Record deleted successfully!');
+          this.getAllMedicalRecords();
+        },
+        error => {
+          console.error('Error deleting record:', error);
+          alert('Failed to delete record.');
+        }
+      );
+    }
+  }
+  
 
   onSubmit(): void {
     if (this.isEditMode) {

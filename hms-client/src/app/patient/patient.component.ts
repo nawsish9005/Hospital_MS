@@ -27,30 +27,46 @@ export class PatientComponent implements OnInit {
   constructor(private hmsService: HmsService) {}
 
   ngOnInit(): void {
-    this.getPatients();
+    this.getPatient();
   }
 
-  getPatients(): void {
+  getPatient(): void {
     this.hmsService.GetPatient().subscribe(
       data => {
-        this.patients = data as any[];
+        this.patients = (data as any[]).map(patient =>({
+          ...patient,
+          dateofBirth: this.formatDate(patient.dateOfBirth)
+        }));
       },
       error => {
-        console.error('Error fetching doctors:', error);
-        alert('Error fetching doctor list!');
+        console.error('Error fetching patients:', error);
+        alert('Error fetching patient list!');
       }
     );
   }
+  private formatDate(dateString: string): string {
+  if (!dateString) return '';
+  
+  try {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Formats as YYYY-MM-DD
+    // OR for more readable format:
+    // return date.toLocaleDateString();
+  } catch (e) {
+    console.error('Error formatting date:', e);
+    return dateString; // Return original if parsing fails
+  }
+}
 
-  getDoctorById(id: number): void {
-    this.hmsService.GetDoctorById(id).subscribe(
+  getPatientById(id: number): void {
+    this.hmsService.GetPatientById(id).subscribe(
       data => {
         this.patient = { ...data } as any;
         this.isEditMode = true;
       },
       error => {
-        console.error('Error fetching doctor:', error);
-        alert('Error fetching doctor details!');
+        console.error('Error fetching patient:', error);
+        alert('Error fetching patient details!');
       }
     );
   }
@@ -67,26 +83,26 @@ export class PatientComponent implements OnInit {
     formData.append('address', this.patient.address);
     formData.append('region', this.patient.region || '');
     formData.append('country', this.patient.country);
-    formData.append('postalCode', this.patient.bloodGroup || '');
-    formData.append('specialization', this.patient.dateofBirth);
-
+    formData.append('bloodGroup', this.patient.bloodGroup || '');
+    formData.append('dateOfBirth', this.patient.dateofBirth);
+  
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
-
-    this.hmsService.CreateDoctor(formData).subscribe(
+  
+    this.hmsService.CreatePatient(formData).subscribe(
       response => {
         console.log('Patient added:', response);
         alert('Patient added successfully!');
         this.resetForm();
-        this.getPatients();
+        this.getPatient();
       },
       error => {
         console.error('Error adding patient:', error);
         alert('Failed to add patient. Please check your inputs.');
       }
     );
-  }
+  }  
 
   updatePatient(): void {
     if (this.patient.id === 0) {
@@ -114,7 +130,7 @@ export class PatientComponent implements OnInit {
         console.log('Patient updated successfully!');
         alert('Patient updated successfully!');
         this.resetForm();
-        this.getPatients();
+        this.getPatient();
       },
       error => {
         console.error('Error updating patient:', error);
@@ -129,7 +145,7 @@ export class PatientComponent implements OnInit {
         () => {
           console.log('Patient deleted successfully!');
           alert('Patient deleted successfully!');
-          this.getPatients();
+          this.getPatient();
         },
         error => {
           console.error('Error deleting patient:', error);

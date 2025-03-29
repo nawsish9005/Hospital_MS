@@ -111,9 +111,9 @@ export class HmsService {
   
   public patientUrl = "/Patient";
 
-  public GetPatient(){
-    return this.http.get(this.baseUrl + this.patientUrl);
-   }
+   GetPatient(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl + this.patientUrl}`);
+  }
 
    public GetPatientById(id: number){
     return this.http.get(this.baseUrl + this.patientUrl + "/" + id);
