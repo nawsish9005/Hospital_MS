@@ -84,30 +84,86 @@ namespace HMS.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<Patient>> UpdatePatient(int id, Patient patient)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> UpdatePatient(int id, [FromForm] PatientDTO patientDto, [FromForm] IFormFile? image)
         {
-            if (id != patient.Id)
+            try
             {
-                return BadRequest();
-            }
-            context.Entry(patient).State = EntityState.Modified;
-            await context.SaveChangesAsync();
-            return Ok(patient);
+                var patient = await context.Patients.FindAsync(id);
+                if (patient == null)
+                {
+                    return NotFound($"Patient with ID {id} not found.");
+                }
 
+                // Update patient details
+                patient.Name = patientDto.Name;
+                patient.Contact = patientDto.Contact;
+                patient.Email = patientDto.Email;
+                patient.Address = patientDto.Address;
+                patient.Region = patientDto.Region;
+                patient.Country = patientDto.Country;
+                patient.BloodGroup = patientDto.BloodGroup;
+                patient.DateOfBirth = patientDto.DateOfBirth;
+
+                if (image != null)
+                {
+                    var uploadsDir = Path.Combine(env.WebRootPath, "images", "patient");
+                    if (!Directory.Exists(uploadsDir))
+                    {
+                        Directory.CreateDirectory(uploadsDir);
+                    }
+
+                    var filePath = Path.Combine(uploadsDir, image.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await image.CopyToAsync(stream);
+                    }
+
+                    patient.ImageUrls = "/images/patient/" + image.FileName;
+                }
+
+                context.Patients.Update(patient);
+                await context.SaveChangesAsync();
+
+                return Ok(patient);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Patient>> DeletePatient(int id)
+        public async Task<IActionResult> DeletePatient(int id)
         {
-            var patient = await context.Patients.FindAsync(id);
-            if (patient == null)
+            try
             {
-                return NotFound();
-            }
-            context.Patients.Remove(patient);
-            await context.SaveChangesAsync();
-            return Ok();
+                var patient = await context.Patients.FindAsync(id);
+                if (patient == null)
+                {
+                    return NotFound($"Patient with ID {id} not found.");
+                }
 
+                // Delete the patient image if it exists
+                if (!string.IsNullOrEmpty(patient.ImageUrls))
+                {
+                    var filePath = Path.Combine(env.WebRootPath, patient.ImageUrls.TrimStart('/'));
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+
+                context.Patients.Remove(patient);
+                await context.SaveChangesAsync();
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
+
     }
 }
