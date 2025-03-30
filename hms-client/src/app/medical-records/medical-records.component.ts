@@ -8,7 +8,7 @@ import { HmsService } from '../services/hms.service';
 })
 export class MedicalRecordsComponent implements OnInit {
   medicalRecord = {
-    id: 0,
+    id: 0,  
     patientId: 0,
     diagnosis: '',
     treatment: '',
@@ -17,10 +17,11 @@ export class MedicalRecordsComponent implements OnInit {
     followUpNotes: '',
     laboratoryResults: '',
     therapies: '',
-    nextVisitDate: '',
+    next_Visit_Date: '',
     paymentRecords: '',
     imageUrls: ''
   };
+
   patients: any[] = [];
   selectedFiles: File[] = [];
   medicalRecords: any[] = [];
@@ -29,26 +30,45 @@ export class MedicalRecordsComponent implements OnInit {
   constructor(private hmsService: HmsService) {}
 
   ngOnInit(): void {
+    this.getPatients();
     this.getAllMedicalRecords();
   }
 
   onFileSelected(event: any): void {
-    if (event.target.files.length > 0) {
-      this.selectedFiles = event.target.files[0];
+    this.selectedFiles = Array.from(event.target.files);
+    console.log("Selected files:", this.selectedFiles);
+  }
+
+  getAllMedicalRecords(): void {
+    this.hmsService.GetAllMedicalRecords().subscribe(
+      (data: any) => {
+        if (Array.isArray(data)) {
+          this.medicalRecords = data.map(record => ({
+            ...record,
+            patientName: record.patientName,
+            nextVisitDate: this.formatDate(record.nextVisitDate)
+          }));
+        } else {
+          console.error('Unexpected data format:', data);
+          this.medicalRecords = [];
+        }
+      },
+      error => console.error('Error fetching medical records:', error)
+    );
+  }
+
+  private formatDate(dateString: string): string {
+    if (!dateString) return '';
+  
+    try {
+      const date = new Date(dateString);
+      return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+    } catch (e) {
+      console.error('Error formatting date:', e);
+      return dateString;
     }
   }
   
-  getAllMedicalRecords(): void {
-    this.hmsService.GetAllMedicalRecords().subscribe(
-      data => {
-        this.medicalRecords = data as any[];
-      },
-      error => {
-        console.error('Error fetching medical records:', error);
-        alert('Error fetching medical records list!');
-      }
-    );
-  }
 
   getMedicalRecordById(id: number): void {
     this.hmsService.GetMedicalRecordById(id).subscribe(
@@ -63,11 +83,12 @@ export class MedicalRecordsComponent implements OnInit {
     );
   }
 
-  onFilesSelected(event: any): void {
-    this.selectedFiles = Array.from(event.target.files);
-  }
-
   createMedicalRecord(): void {
+    if (!this.medicalRecord.patientId || this.medicalRecord.patientId === 0) {
+      alert("Please select a valid patient.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append('patientId', this.medicalRecord.patientId.toString());
     formData.append('diagnosis', this.medicalRecord.diagnosis);
@@ -77,14 +98,15 @@ export class MedicalRecordsComponent implements OnInit {
     formData.append('followUpNotes', this.medicalRecord.followUpNotes);
     formData.append('laboratoryResults', this.medicalRecord.laboratoryResults);
     formData.append('therapies', this.medicalRecord.therapies);
-    formData.append('nextVisitDate', this.medicalRecord.nextVisitDate);
+    formData.append('nextVisitDate', this.medicalRecord.next_Visit_Date);
     formData.append('paymentRecords', this.medicalRecord.paymentRecords);
 
-    if (this.selectedFiles.length > 0) {
-      this.selectedFiles.forEach(file => {
-        formData.append('images', file);
-      });
-    }
+    // Append multiple images
+    this.selectedFiles.forEach(file => {
+      formData.append('images', file);
+    });
+
+    console.log("Sending FormData:", formData);
 
     this.hmsService.CreateMedicalRecord(formData).subscribe(
       response => {
@@ -116,14 +138,14 @@ export class MedicalRecordsComponent implements OnInit {
     formData.append('followUpNotes', this.medicalRecord.followUpNotes);
     formData.append('laboratoryResults', this.medicalRecord.laboratoryResults);
     formData.append('therapies', this.medicalRecord.therapies);
-    formData.append('nextVisitDate', this.medicalRecord.nextVisitDate);
+    formData.append('nextVisitDate', this.medicalRecord.next_Visit_Date);
     formData.append('paymentRecords', this.medicalRecord.paymentRecords);
 
-    if (this.selectedFiles.length > 0) {
-      this.selectedFiles.forEach(file => {
-        formData.append('images', file);
-      });
-    }
+    this.selectedFiles.forEach(file => {
+      formData.append('images', file);
+    });
+
+    console.log("Updating record with FormData:", formData);
 
     this.hmsService.UpdateMedicalRecord(this.medicalRecord.id, formData).subscribe(
       () => {
@@ -186,7 +208,6 @@ export class MedicalRecordsComponent implements OnInit {
       );
     }
   }
-  
 
   onSubmit(): void {
     if (this.isEditMode) {
@@ -207,7 +228,7 @@ export class MedicalRecordsComponent implements OnInit {
       followUpNotes: '',
       laboratoryResults: '',
       therapies: '',
-      nextVisitDate: '',
+      next_Visit_Date: '',
       paymentRecords: '',
       imageUrls: ''
     };

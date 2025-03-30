@@ -44,17 +44,16 @@ export class PatientComponent implements OnInit {
       }
     );
   }
+  
   private formatDate(dateString: string): string {
   if (!dateString) return '';
   
   try {
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0]; // Formats as YYYY-MM-DD
-    // OR for more readable format:
-    // return date.toLocaleDateString();
+    return date.toISOString().split('T')[0];
   } catch (e) {
     console.error('Error formatting date:', e);
-    return dateString; // Return original if parsing fails
+    return dateString;
   }
 }
 

@@ -79,8 +79,8 @@
                             <div class="row mb-4">
                                 <div class="col-md-6 mb-3">
                                     <div class="form-floating">
-                                        <input type="date" class="form-control" id="nextVisitDate" [(ngModel)]="medicalRecord.nextVisitDate" name="nextVisitDate" required>
-                                        <label for="nextVisitDate">Next Visit Date</label>
+                                        <input type="date" class="form-control" id="next_Visit_Date" [(ngModel)]="medicalRecord.next_Visit_Date" name="next_Visit_Date" required>
+                                        <label for="next_Visit_Date">Next Visit Date</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -133,10 +133,10 @@
                         <tbody>
                             <tr *ngFor="let record of medicalRecords; let i = index">
                                 <td>{{ i + 1 }}</td>
-                                <td>{{ record.patientId }}</td>
+                                <td>{{ record.patientName }}</td>
                                 <td>{{ record.diagnosis }}</td>
                                 <td>{{ record.treatment }}</td>
-                                <td>{{ record.nextVisitDate }}</td>
+                                <td>{{ record.next_Visit_Date }}</td>
                                 <td>
                                     <button class="btn btn-warning btn-sm" (click)="editRecord(record)">Edit</button>
                                     <button class="btn btn-danger btn-sm" (click)="deleteRecord(record.id)">Delete</button>
