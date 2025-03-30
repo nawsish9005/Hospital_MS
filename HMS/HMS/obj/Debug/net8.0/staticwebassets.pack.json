@@ -5,6 +5,18 @@
       "PackagePath": "staticwebassets\\images\\doctor\\Screenshot 2025-02-01 204145.png"
     },
     {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\doctor\\Screenshot 2025-02-26 170751.png",
+      "PackagePath": "staticwebassets\\images\\doctor\\Screenshot 2025-02-26 170751.png"
+    },
+    {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\medicalRecords\\Screenshot 2025-02-26 164351.png",
+      "PackagePath": "staticwebassets\\images\\medicalRecords\\Screenshot 2025-02-26 164351.png"
+    },
+    {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\patient\\Screenshot 2025-02-23 154532.png",
+      "PackagePath": "staticwebassets\\images\\patient\\Screenshot 2025-02-23 154532.png"
+    },
+    {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.HMS.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

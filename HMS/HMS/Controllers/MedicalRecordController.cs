@@ -23,7 +23,18 @@ namespace HMS.Controllers
         {
             try
             {
-                var query = _context.MedicalRecords.AsQueryable();
+                var query = _context.MedicalRecords
+                    .Include(mr => mr.Patient) // Ensure Patient data is included
+                    .Select(mr => new
+                    {
+                        mr.Id,
+                        mr.PatientId,
+                        PatientName = mr.Patient.Name, // Fetch patient name
+                        mr.Diagnosis,
+                        mr.Treatment,
+                        mr.Next_Visit_Date
+                    })
+                    .AsQueryable();
 
                 if (patientId.HasValue)
                 {
@@ -39,6 +50,7 @@ namespace HMS.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
 
         // GET a specific medical record
         [HttpGet("{id}")]
