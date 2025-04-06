@@ -22,7 +22,7 @@ export class DoctorComponent implements OnInit {
   };
 
   selectedFile: File | null = null;
-  doctors: any[] = [];
+  doctors: Doctor[] = [];
   isEditMode: boolean = false;
 
   constructor(private hmsService: HmsService) {}
@@ -34,7 +34,12 @@ export class DoctorComponent implements OnInit {
   getDoctors(): void {
     this.hmsService.GetDoctor().subscribe(
       data => {
-        this.doctors = data as any[];
+        this.doctors = data as Doctor[];
+        this.doctors = this.doctors.map(doctor => ({
+          ...doctor,
+          imageUrl: `https://localhost:7212${doctor.imageUrl}`    
+      }));
+      
       },
       error => {
         console.error('Error fetching doctors:', error);
@@ -164,4 +169,18 @@ export class DoctorComponent implements OnInit {
     this.selectedFile = null;
     this.isEditMode = false;
   }
+
+}
+
+interface Doctor {
+  id: number;
+  name: string;
+  email: string;
+  contact: string;
+  address: string;
+  country: string;
+  region: string;
+  postalCode: string;
+  imageUrl: string;
+  specialization: string; // Note: The value appears to be a date string, consider renaming if this is actually a date
 }

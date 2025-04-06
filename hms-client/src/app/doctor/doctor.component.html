@@ -142,7 +142,11 @@
                   <td>{{ doctor.postalCode }}</td>
                   <td>{{ doctor.specialization }}</td>
                   <td>
-                    <img *ngIf="doctor.imageUrl" [src]="doctor.imageUrl" alt="Doctor Image" width="50" height="50">
+                    <img *ngIf="doctor.imageUrl" 
+                      [src]="doctor.imageUrl" 
+                      alt="Doctor Image" 
+                    width="100" height="100" />
+
                   </td>
                   <td>
                     <button class="btn btn-warning btn-sm" >Edit</button>
