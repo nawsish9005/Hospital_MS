@@ -88,9 +88,9 @@
                   
                   <div class="col-md-4 mb-3">
                     <div class="form-floating">
-                      <input type="date" class="form-control" id="dateofBirth" [(ngModel)]="patient.dateofBirth" 
-                             name="dateofBirth" placeholder="Date of Birth" required>
-                      <label for="dateofBirth">Date of Birth</label>
+                      <input type="date" class="form-control" id="dateOfBirth" [(ngModel)]="patient.dateOfBirth" 
+                             name="dateOfBirth" placeholder="Date of Birth" required>
+                      <label for="dateOfBirth">Date of Birth</label>
                       <div class="invalid-feedback">Please provide a valid date of birth</div>
                     </div>
                   </div>
@@ -149,9 +149,12 @@
                   <td>{{ patient.region }}</td>
                   <td>{{ patient.country }}</td>
                   <td>{{ patient.bloodGroup }}</td>
-                  <td>{{ patient.dateofBirth }}</td>
+                  <td>{{ patient.dateOfBirth }}</td>
                   <td>
-                    <img *ngIf="patient.imageUrl" [src]="patient.imageUrl" alt="Patient Image" width="50" height="50">
+                    <img *ngIf="patient.imageUrls" 
+                      [src]="patient.imageUrls" 
+                      alt="Patient Image" 
+                    width="100" height="100" />
                   </td>
                   <td>
                     <button class="btn btn-warning btn-sm" >Edit</button>

@@ -11,32 +11,36 @@ export class PatientComponent implements OnInit {
     id: 0,
     name: '',
     contact: '',
-    dateofBirth:'',
+    dateOfBirth: '',
     bloodGroup: '',
     email: '',
     address: '',
     region: '',
     country: '',
-    imageUrl: ''
+    imageUrls: ''
   };
 
   selectedFile: File | null = null;
-  patients: any[] = [];
+  patients: Patient[] = [];
   isEditMode: boolean = false;
 
   constructor(private hmsService: HmsService) {}
 
   ngOnInit(): void {
-    this.getPatient();
+    this.getPatients();
   }
 
-  getPatient(): void {
+  getPatients(): void {
     this.hmsService.GetPatient().subscribe(
       data => {
-        this.patients = (data as any[]).map(patient =>({
+        this.patients = data as Patient[];
+        this.patients = this.patients.map(patient => ({
           ...patient,
-          dateofBirth: this.formatDate(patient.dateOfBirth)
+          imageUrls: `https://localhost:7212${patient.imageUrls}`, 
+          dateOfBirth: this.formatDate(patient.dateOfBirth)
+          
         }));
+        console.log(this.patients);
       },
       error => {
         console.error('Error fetching patients:', error);
@@ -44,18 +48,12 @@ export class PatientComponent implements OnInit {
       }
     );
   }
-  
+
   private formatDate(dateString: string): string {
-  if (!dateString) return '';
-  
-  try {
+    if (!dateString) return '';
     const date = new Date(dateString);
-    return date.toISOString().split('T')[0];
-  } catch (e) {
-    console.error('Error formatting date:', e);
-    return dateString;
+    return date.toLocaleDateString(); // or your preferred format
   }
-}
 
   getPatientById(id: number): void {
     this.hmsService.GetPatientById(id).subscribe(
@@ -83,25 +81,25 @@ export class PatientComponent implements OnInit {
     formData.append('region', this.patient.region || '');
     formData.append('country', this.patient.country);
     formData.append('bloodGroup', this.patient.bloodGroup || '');
-    formData.append('dateOfBirth', this.patient.dateofBirth);
-  
+    formData.append('dateOfBirth', this.patient.dateOfBirth);
+
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
     }
-  
+
     this.hmsService.CreatePatient(formData).subscribe(
       response => {
         console.log('Patient added:', response);
         alert('Patient added successfully!');
         this.resetForm();
-        this.getPatient();
+        this.getPatients();
       },
       error => {
         console.error('Error adding patient:', error);
         alert('Failed to add patient. Please check your inputs.');
       }
     );
-  }  
+  }
 
   updatePatient(): void {
     if (this.patient.id === 0) {
@@ -118,7 +116,7 @@ export class PatientComponent implements OnInit {
     formData.append('region', this.patient.region || '');
     formData.append('country', this.patient.country);
     formData.append('bloodGroup', this.patient.bloodGroup || '');
-    formData.append('dateofBirth', this.patient.dateofBirth);
+    formData.append('dateOfBirth', this.patient.dateOfBirth);
 
     if (this.selectedFile) {
       formData.append('image', this.selectedFile);
@@ -129,7 +127,7 @@ export class PatientComponent implements OnInit {
         console.log('Patient updated successfully!');
         alert('Patient updated successfully!');
         this.resetForm();
-        this.getPatient();
+        this.getPatients();
       },
       error => {
         console.error('Error updating patient:', error);
@@ -144,7 +142,7 @@ export class PatientComponent implements OnInit {
         () => {
           console.log('Patient deleted successfully!');
           alert('Patient deleted successfully!');
-          this.getPatient();
+          this.getPatients();
         },
         error => {
           console.error('Error deleting patient:', error);
@@ -171,11 +169,26 @@ export class PatientComponent implements OnInit {
       address: '',
       region: '',
       country: '',
-      dateofBirth: '',
-      imageUrl: '',
+      dateOfBirth: '',
+      imageUrls: '',
       bloodGroup: ''
     };
     this.selectedFile = null;
     this.isEditMode = false;
   }
+}
+
+interface Patient {
+  id: number;
+  name: string;
+  email: string;
+  contact: string;
+  address: string;
+  country: string;
+  region: string;
+  postalCode: string;
+  imageUrls: string;
+  dateOfBirth: string;
+  bloodGroup?: string;
+  gender?: string;
 }
