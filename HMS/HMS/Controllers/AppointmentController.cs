@@ -1,5 +1,6 @@
 ﻿using HMS.Data;
 using HMS.Models;
+using HMS.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,110 +15,107 @@ namespace HMS.Controllers
         {
             _context = context;
         }
-        // GET: api/Appointment
+        // GET: api/appointments
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Appointment>>> GetAllAppointments()
+        public async Task<ActionResult<IEnumerable<AppointmentDTO>>> GetAppointments()
         {
-            return await _context.Appointments
-                .Include(a => a.Doctor) // Include Doctor details
-                .Include(a => a.Patient) // Include Patient details
+            var appointments = await _context.Appointments
+                .Include(a => a.Doctor)
+                .Include(a => a.Patient)
+                .Select(a => new AppointmentDTO
+                {
+                    Id = a.Id,
+                    DoctorId = a.DoctorId,
+                    DoctorName = a.Doctor.Name,
+                    PatientId = a.PatientId,
+                    PatientName = a.Patient.Name,
+                    Purpose = a.Purpose,
+                    Date = a.Date
+                })
                 .ToListAsync();
+
+            return Ok(appointments);
         }
 
-        // GET: api/Appointments/5
+        // GET: api/appointments/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Appointment>> GetAppointmentById(int id)
+        public async Task<ActionResult<AppointmentDTO>> GetAppointment(int id)
         {
             var appointment = await _context.Appointments
-                .Include(a => a.Doctor) // Include Doctor details
-                .Include(a => a.Patient) // Include Patient details
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .Include(a => a.Doctor)
+                .Include(a => a.Patient)
+                .Where(a => a.Id == id)
+                .Select(a => new AppointmentDTO
+                {
+                    Id = a.Id,
+                    DoctorId = a.DoctorId,
+                    DoctorName = a.Doctor.Name,
+                    PatientId = a.PatientId,
+                    PatientName = a.Patient.Name,
+                    Purpose = a.Purpose,
+                    Date = a.Date
+                })
+                .FirstOrDefaultAsync();
 
             if (appointment == null)
             {
                 return NotFound();
             }
 
-            return appointment;
+            return Ok(appointment);
         }
 
-        // POST: api/Appointments
+        // POST: api/appointments
         [HttpPost]
-        public async Task<ActionResult<Appointment>> CreateAppointment([FromBody] Appointment appointment)
+        public async Task<ActionResult> CreateAppointment([FromBody] AppointmentDTO dto)
         {
-            if (appointment == null)
+            var appointment = new Appointment
             {
-                return BadRequest("Appointment data is required.");
-            }
-
-            // Check if the Doctor and Patient exist
-            var doctorExists = await _context.Doctors.AnyAsync(d => d.Id == appointment.DoctorId);
-            var patientExists = await _context.Patients.AnyAsync(p => p.Id == appointment.PatientId);
-
-            if (!doctorExists || !patientExists)
-            {
-                return NotFound("Doctor or Patient not found.");
-            }
+                DoctorId = dto.DoctorId,
+                PatientId = dto.PatientId,
+                Purpose = dto.Purpose,
+                Date = dto.Date
+            };
 
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetAppointmentById), new { id = appointment.Id }, appointment);
+            return Ok(new { message = "Appointment created successfully!" });
         }
 
-            // PUT: api/Appointments/5
-            [HttpPut("{id}")]
-            public async Task<IActionResult> UpdateAppointment(int id, [FromBody] Appointment updatedAppointment)
-            {
-                if (id != updatedAppointment.Id)
-                {
-                    return BadRequest("ID mismatch.");
-                }
+        // PUT: api/appointments/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult> UpdateAppointment(int id, [FromBody] AppointmentDTO dto)
+        {
+            if (id != dto.Id)
+                return BadRequest("ID mismatch");
 
-                // Check if the Doctor and Patient exist
-                var doctorExists = await _context.Doctors.AnyAsync(d => d.Id == updatedAppointment.DoctorId);
-                var patientExists = await _context.Patients.AnyAsync(p => p.Id == updatedAppointment.PatientId);
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+                return NotFound();
 
-                if (!doctorExists || !patientExists)
-                {
-                    return NotFound("Doctor or Patient not found.");
-                }
+            appointment.DoctorId = dto.DoctorId;
+            appointment.PatientId = dto.PatientId;
+            appointment.Purpose = dto.Purpose;
+            appointment.Date = dto.Date;
 
-                _context.Entry(updatedAppointment).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-                try
-                {
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Appointments.Any(a => a.Id == id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+            return Ok(new { message = "Appointment updated successfully!" });
+        }
 
-                return NoContent();
-            }
+        // DELETE: api/appointments/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAppointment(int id)
+        {
+            var appointment = await _context.Appointments.FindAsync(id);
+            if (appointment == null)
+                return NotFound();
 
-            // DELETE: api/Appointments/5
-            [HttpDelete("{id}")]
-            public async Task<IActionResult> DeleteAppointment(int id)
-            {
-                var appointment = await _context.Appointments.FindAsync(id);
-                if (appointment == null)
-                {
-                    return NotFound();
-                }
+            _context.Appointments.Remove(appointment);
+            await _context.SaveChangesAsync();
 
-                _context.Appointments.Remove(appointment);
-                await _context.SaveChangesAsync();
-
-                return NoContent();
-            }
+            return Ok(new { message = "Appointment deleted successfully!" });
+        }
     }
 }

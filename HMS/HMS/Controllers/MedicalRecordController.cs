@@ -24,12 +24,12 @@ namespace HMS.Controllers
             try
             {
                 var query = _context.MedicalRecords
-                    .Include(mr => mr.Patient) // Ensure Patient data is included
+                    .Include(mr => mr.Patient)
                     .Select(mr => new
                     {
                         mr.Id,
                         mr.PatientId,
-                        PatientName = mr.Patient.Name, // Fetch patient name
+                        PatientName = mr.Patient.Name,
                         mr.Diagnosis,
                         mr.Treatment,
                         mr.Next_Visit_Date

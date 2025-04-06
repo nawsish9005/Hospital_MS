@@ -1,5 +1,6 @@
 ﻿using HMS.Data;
 using HMS.Models;
+using HMS.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -17,121 +18,148 @@ namespace HMS.Controllers
         {
             _context = context;
         }
-        // GET: api/Prescriptions
+
+        // GET: api/prescriptions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Prescription>>> GetAllPrescriptions()
+        public async Task<ActionResult<IEnumerable<PrescriptionDTO>>> GetPrescriptions()
         {
-            return await _context.Prescriptions
+            var prescriptions = await _context.Prescriptions
                 .Include(p => p.Doctor)
                 .Include(p => p.Patient)
                 .Include(p => p.MedicineInfos)
-                .ToListAsync();
+                .Select(p => new PrescriptionDTO
+                {
+                    Id = p.Id,
+                    DoctorId = p.DoctorId,
+                    DoctorName = p.Doctor.Name,
+                    PatientId = p.PatientId,
+                    PatientName = p.Patient.Name,
+                    Duration = p.Duration,
+                    Notes = p.Notes,
+                    MedicineInfos = p.MedicineInfos.Select(m => new MedicineInfoDTO
+                    {
+                        Id = m.Id,
+                        MedicineName = m.MedicineName,
+                        Dosage = m.Dosage,
+                        Frequency = m.Frequency
+                    }).ToList()
+                }).ToListAsync();
+
+            return Ok(prescriptions);
         }
 
-        // GET: api/Prescriptions/5
+        // GET: api/prescriptions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Prescription>> GetPrescriptionById(int id)
+        public async Task<ActionResult<PrescriptionDTO>> GetPrescription(int id)
         {
-            var prescription = await _context.Prescriptions
+            var p = await _context.Prescriptions
                 .Include(p => p.Doctor)
                 .Include(p => p.Patient)
                 .Include(p => p.MedicineInfos)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .Where(p => p.Id == id)
+                .Select(prescription => new PrescriptionDTO
+                {
+                    Id = prescription.Id,
+                    DoctorId = prescription.DoctorId,
+                    DoctorName = prescription.Doctor.Name,
+                    PatientId = prescription.PatientId,
+                    PatientName = prescription.Patient.Name,
+                    Duration = prescription.Duration,
+                    Notes = prescription.Notes,
+                    MedicineInfos = prescription.MedicineInfos.Select(m => new MedicineInfoDTO
+                    {
+                        Id = m.Id,
+                        MedicineName = m.MedicineName,
+                        Dosage = m.Dosage,
+                        Frequency = m.Frequency
+                    }).ToList()
+                }).FirstOrDefaultAsync();
 
-            if (prescription == null)
-            {
+            if (p == null)
                 return NotFound();
-            }
 
-            return prescription;
+            return Ok(p);
         }
 
-        // POST: api/Prescriptions
+        // POST: api/prescriptions
         [HttpPost]
-        public async Task<ActionResult<Prescription>> CreatePrescription([FromBody] Prescription prescription)
+        public async Task<ActionResult> CreatePrescription([FromBody] PrescriptionDTO dto)
         {
-            if (prescription == null)
+            var prescription = new Prescription
             {
-                return BadRequest("Prescription data is required.");
-            }
-
-            // Check if Doctor and Patient exist
-            var doctorExists = await _context.Doctors.AnyAsync(d => d.Id == prescription.DoctorId);
-            var patientExists = await _context.Patients.AnyAsync(p => p.Id == prescription.PatientId);
-
-            if (!doctorExists || !patientExists)
-            {
-                return NotFound("Doctor or Patient not found.");
-            }
-
-            prescription.Doctor = null;
-            prescription.Patient = null;
+                DoctorId = dto.DoctorId,
+                PatientId = dto.PatientId,
+                Duration = dto.Duration,
+                Notes = dto.Notes,
+                MedicineInfos = dto.MedicineInfos.Select(m => new MedicineInfo
+                {
+                    MedicineName = m.MedicineName,
+                    Dosage = m.Dosage,
+                    Frequency = m.Frequency
+                }).ToList()
+            };
 
             _context.Prescriptions.Add(prescription);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetPrescriptionById), new { id = prescription.Id }, prescription);
+            return Ok(new { message = "Prescription created successfully!" });
         }
 
-        // PUT: api/Prescriptions/5
+        // PUT: api/prescriptions/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePrescription(int id, [FromBody] Prescription updatedPrescription)
+        public async Task<ActionResult> UpdatePrescription(int id, [FromBody] PrescriptionDTO dto)
         {
-            if (id != updatedPrescription.Id)
+            if (id != dto.Id)
+                return BadRequest("ID mismatch");
+
+            var prescription = await _context.Prescriptions
+                .Include(p => p.MedicineInfos)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (prescription == null)
+                return NotFound();
+
+            prescription.DoctorId = dto.DoctorId;
+            prescription.PatientId = dto.PatientId;
+            prescription.Duration = dto.Duration;
+            prescription.Notes = dto.Notes;
+
+            // Remove old meds
+            _context.MedicineInfos.RemoveRange(prescription.MedicineInfos);
+
+            // Add new meds
+            prescription.MedicineInfos = dto.MedicineInfos.Select(m => new MedicineInfo
             {
-                return BadRequest("ID mismatch.");
-            }
+                MedicineName = m.MedicineName,
+                Dosage = m.Dosage,
+                Frequency = m.Frequency
+            }).ToList();
 
-            // Check if Doctor and Patient exist
-            var doctorExists = await _context.Doctors.AnyAsync(d => d.Id == updatedPrescription.DoctorId);
-            var patientExists = await _context.Patients.AnyAsync(p => p.Id == updatedPrescription.PatientId);
+            await _context.SaveChangesAsync();
 
-            if (!doctorExists || !patientExists)
-            {
-                return NotFound("Doctor or Patient not found.");
-            }
-
-            updatedPrescription.Doctor = null;
-            updatedPrescription.Patient = null;
-
-            _context.Entry(updatedPrescription).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!_context.Prescriptions.Any(p => p.Id == id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(new { message = "Prescription updated successfully!" });
         }
 
-        // DELETE: api/Prescriptions/5
+        // DELETE: api/prescriptions/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePrescription(int id)
+        public async Task<ActionResult> DeletePrescription(int id)
         {
             var prescription = await _context.Prescriptions
                 .Include(p => p.MedicineInfos)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (prescription == null)
-            {
                 return NotFound();
-            }
 
+            _context.MedicineInfos.RemoveRange(prescription.MedicineInfos);
             _context.Prescriptions.Remove(prescription);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(new { message = "Prescription deleted successfully!" });
         }
+
+
+
+
     }
 }

@@ -16,5 +16,17 @@
         <member name="M:HMS.Migrations.updatedb.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:HMS.Migrations.updatemedicine">
+            <inheritdoc />
+        </member>
+        <member name="M:HMS.Migrations.updatemedicine.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HMS.Migrations.updatemedicine.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HMS.Migrations.updatemedicine.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
     </members>
 </doc>

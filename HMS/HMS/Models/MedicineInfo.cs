@@ -6,15 +6,12 @@ namespace HMS.Models
     public class MedicineInfo
     {
         public int Id { get; set; }
-        public string Medicines { get; set; }
+        public string MedicineName { get; set; }
         public string Dosage { get; set; }
-        public DateTime From_Date { get; set; }
-        public DateTime ToDate { get; set; }
+        public string Frequency { get; set; }
+
         public int PrescriptionId { get; set; }
-
-        [JsonIgnore]
         [ForeignKey("PrescriptionId")]
-
-        public Prescription? Prescription { get; set; }
+        public Prescription Prescription { get; set; }
     }
 }
