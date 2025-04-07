@@ -182,5 +182,5 @@ interface Doctor {
   region: string;
   postalCode: string;
   imageUrl: string;
-  specialization: string; // Note: The value appears to be a date string, consider renaming if this is actually a date
+  specialization: string;
 }

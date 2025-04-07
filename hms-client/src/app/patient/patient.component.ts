@@ -160,6 +160,11 @@ export class PatientComponent implements OnInit {
     }
   }
 
+  editRecord(record: any): void {
+    this.patient = { ...record };
+    this.isEditMode = true;
+  }
+
   resetForm(): void {
     this.patient = {
       id: 0,

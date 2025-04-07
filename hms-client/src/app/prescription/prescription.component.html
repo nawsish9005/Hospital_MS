@@ -1,0 +1,138 @@
+<section class="doctor-form-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="card form-card">
+            <div class="card-header bg-primary text-white">
+              <h3 class="mb-0">New <span>Prescription Entry</span></h3>
+            </div>
+            <div class="card-body">
+              <form #prescriptionForm="ngForm" (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+                <div class="row mb-4">
+                  
+                  <!-- Doctor Dropdown -->
+<div class="col-md-6 mb-3">
+    <div class="form-floating">
+      <select class="form-select" id="doctorId" name="doctorId" [(ngModel)]="prescription.doctorId" required>
+        <option value="" disabled selected>Select Doctor</option>
+        <option *ngFor="let doctor of doctors" [value]="doctor.id">{{ doctor.name }}</option>
+      </select>
+      <label for="doctorId">Doctor</label>
+      <div class="invalid-feedback">Doctor is required</div>
+    </div>
+  </div>
+  
+  <!-- Patient Dropdown -->
+  <div class="col-md-6 mb-3">
+    <div class="form-floating">
+      <select class="form-select" id="patientId" name="patientId" [(ngModel)]="prescription.patientId" required>
+        <option value="" disabled selected>Select Patient</option>
+        <option *ngFor="let patient of patients" [value]="patient.id">{{ patient.name }}</option>
+      </select>
+      <label for="patientId">Patient</label>
+      <div class="invalid-feedback">Patient is required</div>
+    </div>
+  </div>
+  
+                </div>
+  
+                <div class="row mb-4">
+                  <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="duration" name="duration"
+                             [(ngModel)]="prescription.duration" placeholder="Duration" required>
+                      <label for="duration">Duration</label>
+                      <div class="invalid-feedback">Duration is required</div>
+                    </div>
+                  </div>
+  
+                  <div class="col-md-6 mb-3">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="notes" name="notes"
+                             [(ngModel)]="prescription.notes" placeholder="Notes">
+                      <label for="notes">Notes</label>
+                    </div>
+                  </div>
+                </div>
+  
+                <!-- Medicine Info -->
+                <div class="row mb-3" *ngFor="let medicine of prescription.medicineInfos; let i = index">
+                  <div class="col-md-10 mb-2">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" placeholder="Medicine Name" 
+                             [(ngModel)]="medicine.name" name="medicine{{i}}" required>
+                      <label>Medicine Name</label>
+                    </div>
+                  </div>
+                  <div class="col-md-2 mb-2 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger btn-sm" (click)="removeMedicine(i)">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+  
+                <div class="mb-3">
+                  <button type="button" class="btn btn-secondary btn-sm" (click)="addMedicine()">Add Medicine</button>
+                </div>
+  
+                <div class="mt-4 text-center">
+                  <button type="submit" class="btnControl btn-lg">
+                    <i class="bi bi-send-fill me-2"></i> Save Prescription
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section class="book_section layout_padding">
+    <div class="">
+      <div class="row">
+        <div class="col-md-12">
+          <h4 class="d-flex justify-content-center">
+            <span>Prescription List</span>
+          </h4>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th>#</th>
+                  <th>Doctor ID</th>
+                  <th>Patient ID</th>
+                  <th>Duration</th>
+                  <th>Notes</th>
+                  <th>Medicines</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of prescriptions; let i = index">
+                  <td>{{ i + 1 }}</td>
+                  <td>{{ p.doctorId }}</td>
+                  <td>{{ p.patientId }}</td>
+                  <td>{{ p.duration }}</td>
+                  <td>{{ p.notes }}</td>
+                  <td>
+                    <ul class="mb-0">
+                      <li *ngFor="let m of p.medicineInfos">{{ m.name }}</li>
+                    </ul>
+                  </td>
+                  <td>
+                    <button class="btn btn-warning btn-sm" (click)="editPrescription(p)">Edit</button>
+                    <button class="btn btn-danger btn-sm" (click)="deletePrescription(p.id)">Delete</button>
+                  </td>
+                </tr>
+                <tr *ngIf="prescriptions.length === 0">
+                  <td colspan="7" class="text-center">No prescriptions found</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  

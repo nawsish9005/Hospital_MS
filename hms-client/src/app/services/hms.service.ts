@@ -75,7 +75,7 @@ export class HmsService {
     return this.http.post(this.baseUrl + this.prescriptionUrl, data);
   }
   
-  public UpdatePrescription(data: any){
+  public UpdatePrescription(data: any, prescription: any){
     return this.http.put(this.baseUrl + this.prescriptionUrl, data)
   }
   

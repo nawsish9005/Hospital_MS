@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PreloaderComponent } from './frontEnd/preloader/preloader.component';
 import { MedicalRecordsComponent } from './medical-records/medical-records.component';
+import { PrescriptionComponent } from './prescription/prescription.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { MedicalRecordsComponent } from './medical-records/medical-records.compo
     PatientComponent,
     DoctorComponent,
     PreloaderComponent,
-    MedicalRecordsComponent
+    MedicalRecordsComponent,
+    PrescriptionComponent
   ],
   imports: [
     BrowserModule,
