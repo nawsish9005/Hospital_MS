@@ -1,16 +1,28 @@
 {
   "Files": [
     {
-      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\doctor\\Screenshot 2025-02-01 204145.png",
-      "PackagePath": "staticwebassets\\images\\doctor\\Screenshot 2025-02-01 204145.png"
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\doctor\\45.png",
+      "PackagePath": "staticwebassets\\images\\doctor\\45.png"
     },
     {
-      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\doctor\\Screenshot 2025-02-26 170751.png",
-      "PackagePath": "staticwebassets\\images\\doctor\\Screenshot 2025-02-26 170751.png"
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\doctor\\51.png",
+      "PackagePath": "staticwebassets\\images\\doctor\\51.png"
+    },
+    {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\doctor\\Screenshot 2025-02-23 154008.png",
+      "PackagePath": "staticwebassets\\images\\doctor\\Screenshot 2025-02-23 154008.png"
+    },
+    {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\doctor\\agbb.jpeg",
+      "PackagePath": "staticwebassets\\images\\doctor\\agbb.jpeg"
     },
     {
       "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\medicalRecords\\Screenshot 2025-02-26 164351.png",
       "PackagePath": "staticwebassets\\images\\medicalRecords\\Screenshot 2025-02-26 164351.png"
+    },
+    {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\patient\\121810=.jpg",
+      "PackagePath": "staticwebassets\\images\\patient\\121810=.jpg"
     },
     {
       "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\patient\\Screenshot 2025-02-23 154532.png",

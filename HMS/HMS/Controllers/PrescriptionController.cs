@@ -19,71 +19,63 @@ namespace HMS.Controllers
             _context = context;
         }
 
-        // GET: api/prescriptions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PrescriptionDTO>>> GetPrescriptions()
+        public async Task<ActionResult<IEnumerable<PrescriptionDTO>>> GetAllPrescriptions()
         {
             var prescriptions = await _context.Prescriptions
-                .Include(p => p.Doctor)
-                .Include(p => p.Patient)
                 .Include(p => p.MedicineInfos)
-                .Select(p => new PrescriptionDTO
-                {
-                    Id = p.Id,
-                    DoctorId = p.DoctorId,
-                    DoctorName = p.Doctor.Name,
-                    PatientId = p.PatientId,
-                    PatientName = p.Patient.Name,
-                    Duration = p.Duration,
-                    Notes = p.Notes,
-                    MedicineInfos = p.MedicineInfos.Select(m => new MedicineInfoDTO
-                    {
-                        Id = m.Id,
-                        MedicineName = m.MedicineName,
-                        Dosage = m.Dosage,
-                        Frequency = m.Frequency
-                    }).ToList()
-                }).ToListAsync();
+                .ToListAsync();
 
-            return Ok(prescriptions);
+            var result = prescriptions.Select(p => new PrescriptionDTO
+            {
+                Id = p.Id,
+                DoctorId = p.DoctorId,
+                PatientId = p.PatientId,
+                Duration = p.Duration,
+                Notes = p.Notes,
+                MedicineInfos = p.MedicineInfos.Select(m => new MedicineInfoDTO
+                {
+                    Id = m.Id,
+                    MedicineName = m.MedicineName,
+                    Dosage = m.Dosage,
+                    Frequency = m.Frequency
+                }).ToList()
+            });
+
+            return Ok(result);
         }
 
-        // GET: api/prescriptions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PrescriptionDTO>> GetPrescription(int id)
+        public async Task<ActionResult<PrescriptionDTO>> GetPrescriptionById(int id)
         {
-            var p = await _context.Prescriptions
-                .Include(p => p.Doctor)
-                .Include(p => p.Patient)
+            var prescription = await _context.Prescriptions
                 .Include(p => p.MedicineInfos)
-                .Where(p => p.Id == id)
-                .Select(prescription => new PrescriptionDTO
-                {
-                    Id = prescription.Id,
-                    DoctorId = prescription.DoctorId,
-                    DoctorName = prescription.Doctor.Name,
-                    PatientId = prescription.PatientId,
-                    PatientName = prescription.Patient.Name,
-                    Duration = prescription.Duration,
-                    Notes = prescription.Notes,
-                    MedicineInfos = prescription.MedicineInfos.Select(m => new MedicineInfoDTO
-                    {
-                        Id = m.Id,
-                        MedicineName = m.MedicineName,
-                        Dosage = m.Dosage,
-                        Frequency = m.Frequency
-                    }).ToList()
-                }).FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-            if (p == null)
+            if (prescription == null)
                 return NotFound();
 
-            return Ok(p);
+            var dto = new PrescriptionDTO
+            {
+                Id = prescription.Id,
+                DoctorId = prescription.DoctorId,
+                PatientId = prescription.PatientId,
+                Duration = prescription.Duration,
+                Notes = prescription.Notes,
+                MedicineInfos = prescription.MedicineInfos.Select(m => new MedicineInfoDTO
+                {
+                    Id = m.Id,
+                    MedicineName = m.MedicineName,
+                    Dosage = m.Dosage,
+                    Frequency = m.Frequency
+                }).ToList()
+            };
+
+            return Ok(dto);
         }
 
-        // POST: api/prescriptions
         [HttpPost]
-        public async Task<ActionResult> CreatePrescription([FromBody] PrescriptionDTO dto)
+        public async Task<ActionResult> CreatePrescription(PrescriptionDTO dto)
         {
             var prescription = new Prescription
             {
@@ -102,16 +94,12 @@ namespace HMS.Controllers
             _context.Prescriptions.Add(prescription);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Prescription created successfully!" });
+            return CreatedAtAction(nameof(GetPrescriptionById), new { id = prescription.Id }, dto);
         }
 
-        // PUT: api/prescriptions/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdatePrescription(int id, [FromBody] PrescriptionDTO dto)
+        public async Task<ActionResult> UpdatePrescription(int id, PrescriptionDTO dto)
         {
-            if (id != dto.Id)
-                return BadRequest("ID mismatch");
-
             var prescription = await _context.Prescriptions
                 .Include(p => p.MedicineInfos)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -124,10 +112,9 @@ namespace HMS.Controllers
             prescription.Duration = dto.Duration;
             prescription.Notes = dto.Notes;
 
-            // Remove old meds
+            // Remove old medicines and add new
             _context.MedicineInfos.RemoveRange(prescription.MedicineInfos);
 
-            // Add new meds
             prescription.MedicineInfos = dto.MedicineInfos.Select(m => new MedicineInfo
             {
                 MedicineName = m.MedicineName,
@@ -136,11 +123,9 @@ namespace HMS.Controllers
             }).ToList();
 
             await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Prescription updated successfully!" });
+            return NoContent();
         }
 
-        // DELETE: api/prescriptions/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeletePrescription(int id)
         {
@@ -155,11 +140,7 @@ namespace HMS.Controllers
             _context.Prescriptions.Remove(prescription);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Prescription deleted successfully!" });
+            return NoContent();
         }
-
-
-
-
     }
 }
