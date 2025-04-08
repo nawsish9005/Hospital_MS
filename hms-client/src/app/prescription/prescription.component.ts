@@ -44,6 +44,17 @@ export class PrescriptionComponent implements OnInit {
     });
   }
 
+  getDoctorName(doctorId: number): string {
+    const doctor = this.doctors.find(d => d.id === doctorId);
+    return doctor ? doctor.name : 'Unknown';
+  }
+  
+  getPatientName(patientId: number): string {
+    const patient = this.patients.find(p => p.id === patientId);
+    return patient ? patient.name : 'Unknown';
+  }
+  
+
   addMedicine(): void {
     this.prescription.medicineInfos.push({ name: '' });
   }

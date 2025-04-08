@@ -98,7 +98,13 @@
                   <div class="col-md-4 mb-3">
                     <label for="imageUrl" class="">Profile Image</label>
                     <input class="form-control" type="file" id="imageUrl" (change)="onFileSelected($event)" name="imageUrl">
+                  
+                    <!-- Preview selected or existing image -->
+                    <div *ngIf="patient.imageUrls && !selectedFile" class="mt-2">
+                      <img [src]="patient.imageUrls" alt="Current Image" width="100" height="100">
+                    </div>
                   </div>
+                  
                 </div>
                 
                 <!-- Submit Button -->
@@ -158,7 +164,7 @@
                   </td>
                   <td>
                     <button class="btn btn-warning btn-sm" (click)="editRecord(patient)">Edit</button>
-                    <button class="btn btn-danger btn-sm">Delete</button>
+                    <button class="btn btn-danger btn-sm" (click)="deletePatient(patient.id)">Delete</button>
                   </td>
                 </tr>
                 <tr *ngIf="patients.length === 0">
