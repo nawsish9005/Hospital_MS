@@ -20,19 +20,14 @@ namespace HMS.Controllers
         public async Task<ActionResult<IEnumerable<AppointmentDTO>>> GetAppointments()
         {
             var appointments = await _context.Appointments
-                .Include(a => a.Doctor)
-                .Include(a => a.Patient)
                 .Select(a => new AppointmentDTO
                 {
                     Id = a.Id,
                     DoctorId = a.DoctorId,
-                    DoctorName = a.Doctor.Name,
                     PatientId = a.PatientId,
-                    PatientName = a.Patient.Name,
                     Purpose = a.Purpose,
                     Date = a.Date
-                })
-                .ToListAsync();
+                }).ToListAsync();
 
             return Ok(appointments);
         }
@@ -41,33 +36,23 @@ namespace HMS.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AppointmentDTO>> GetAppointment(int id)
         {
-            var appointment = await _context.Appointments
-                .Include(a => a.Doctor)
-                .Include(a => a.Patient)
-                .Where(a => a.Id == id)
-                .Select(a => new AppointmentDTO
-                {
-                    Id = a.Id,
-                    DoctorId = a.DoctorId,
-                    DoctorName = a.Doctor.Name,
-                    PatientId = a.PatientId,
-                    PatientName = a.Patient.Name,
-                    Purpose = a.Purpose,
-                    Date = a.Date
-                })
-                .FirstOrDefaultAsync();
+            var appointment = await _context.Appointments.FindAsync(id);
 
             if (appointment == null)
-            {
                 return NotFound();
-            }
 
-            return Ok(appointment);
+            return Ok(new AppointmentDTO
+            {
+                Id = appointment.Id,
+                DoctorId = appointment.DoctorId,
+                PatientId = appointment.PatientId,
+                Purpose = appointment.Purpose,
+                Date = appointment.Date
+            });
         }
 
-        // POST: api/appointments
         [HttpPost]
-        public async Task<ActionResult> CreateAppointment([FromBody] AppointmentDTO dto)
+        public async Task<ActionResult<AppointmentDTO>> CreateAppointment(AppointmentDTO dto)
         {
             var appointment = new Appointment
             {
@@ -80,15 +65,17 @@ namespace HMS.Controllers
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Appointment created successfully!" });
+            dto.Id = appointment.Id;
+
+            return CreatedAtAction(nameof(GetAppointment), new { id = appointment.Id }, dto);
         }
 
-        // PUT: api/appointments/5
+        // PUT: api/Appointment/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateAppointment(int id, [FromBody] AppointmentDTO dto)
+        public async Task<IActionResult> UpdateAppointment(int id, AppointmentDTO dto)
         {
             if (id != dto.Id)
-                return BadRequest("ID mismatch");
+                return BadRequest();
 
             var appointment = await _context.Appointments.FindAsync(id);
             if (appointment == null)
@@ -101,12 +88,12 @@ namespace HMS.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Appointment updated successfully!" });
+            return NoContent();
         }
 
-        // DELETE: api/appointments/5
+        // DELETE: api/Appointment/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAppointment(int id)
+        public async Task<IActionResult> DeleteAppointment(int id)
         {
             var appointment = await _context.Appointments.FindAsync(id);
             if (appointment == null)
@@ -115,7 +102,7 @@ namespace HMS.Controllers
             _context.Appointments.Remove(appointment);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Appointment deleted successfully!" });
+            return NoContent();
         }
     }
 }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "vdI+ZsrIvCrY1ZWXQR3C7Dc9+s9srQjIONK7j0i2YFE=",
+  "Hash": "5sXbvlbOu2YrvMtkT8xUddY9O+1fYcGwZx+esfN2mPs=",
   "Source": "HMS",
   "BasePath": "_content/HMS",
   "Mode": "Default",
@@ -129,25 +129,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\patient\\121810=.jpg"
-    },
-    {
-      "Identity": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\patient\\Screenshot 2025-02-23 154532.png",
-      "SourceId": "HMS",
-      "SourceType": "Discovered",
-      "ContentRoot": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\",
-      "BasePath": "_content/HMS",
-      "RelativePath": "images/patient/Screenshot 2025-02-23 154532.png",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\patient\\Screenshot 2025-02-23 154532.png"
     }
   ]
 }
