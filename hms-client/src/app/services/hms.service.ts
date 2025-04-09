@@ -26,7 +26,7 @@ export class HmsService {
     return this.http.post(this.baseUrl + this.appointmentUrl, data);
   }
   
-  public UpdateAppointment(data: any){
+  public UpdateAppointment(data: any, appointment: { id: number; doctorId: number; patientId: number; purpose: string; date: string; }){
     return this.http.put(this.baseUrl + this.appointmentUrl, data)
   }
   

@@ -14,6 +14,7 @@ import { PreloaderComponent } from './frontEnd/preloader/preloader.component';
 import { MedicalRecordsComponent } from './medical-records/medical-records.component';
 import { PrescriptionComponent } from './prescription/prescription.component';
 import { FooterComponent } from './frontEnd/footer/footer.component';
+import { AppointmentComponent } from './appointment/appointment.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FooterComponent } from './frontEnd/footer/footer.component';
     PreloaderComponent,
     MedicalRecordsComponent,
     PrescriptionComponent,
-    FooterComponent
+    FooterComponent,
+    AppointmentComponent
   ],
   imports: [
     BrowserModule,

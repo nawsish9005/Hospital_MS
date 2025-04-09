@@ -5,13 +5,15 @@ import { DoctorComponent } from './doctor/doctor.component';
 import { PatientComponent } from './patient/patient.component';
 import { MedicalRecordsComponent } from './medical-records/medical-records.component';
 import { PrescriptionComponent } from './prescription/prescription.component';
+import { AppointmentComponent } from './appointment/appointment.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'doctor',title:'Doctor' ,component: DoctorComponent},
   {path: 'patient',title:'Patient' ,component: PatientComponent},
   {path: 'medicalRecords',title:'Medical Record' ,component: MedicalRecordsComponent},
-  {path: 'prescription',title:'Prescription' ,component: PrescriptionComponent}
+  {path: 'prescription',title:'Prescription' ,component: PrescriptionComponent},
+  {path: 'appointment',title:'Appointment' ,component: AppointmentComponent}
 ];
 
 @NgModule({
