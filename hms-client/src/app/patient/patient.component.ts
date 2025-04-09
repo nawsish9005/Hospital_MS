@@ -29,7 +29,15 @@ export class PatientComponent implements OnInit {
   ngOnInit(): void {
     this.getPatients();
   }
+  selectedImageUrl: string | null = null;
 
+    openImageModal(url: string) {
+      this.selectedImageUrl = url;
+    }
+    
+    closeImageModal() {
+      this.selectedImageUrl = null;
+    }
   getPatients(): void {
     this.hmsService.GetPatient().subscribe(
       data => {

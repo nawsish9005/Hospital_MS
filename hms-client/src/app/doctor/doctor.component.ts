@@ -30,6 +30,15 @@ export class DoctorComponent implements OnInit {
   ngOnInit(): void {
     this.getDoctors();
   }
+  selectedImageUrl: string | null = null;
+
+    openImageModal(url: string) {
+      this.selectedImageUrl = url;
+    }
+    
+    closeImageModal() {
+      this.selectedImageUrl = null;
+    }
 
   getDoctors(): void {
     this.hmsService.GetDoctor().subscribe(
@@ -143,6 +152,11 @@ export class DoctorComponent implements OnInit {
         }
       );
     }
+  }
+
+  editRecord(record: any): void {
+    this.doctor = { ...record };
+    this.isEditMode = true;
   }
 
   onSubmit(): void {
