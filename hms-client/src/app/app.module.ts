@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PreloaderComponent } from './frontEnd/preloader/preloader.component';
 import { MedicalRecordsComponent } from './medical-records/medical-records.component';
 import { PrescriptionComponent } from './prescription/prescription.component';
+import { FooterComponent } from './frontEnd/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PrescriptionComponent } from './prescription/prescription.component';
     DoctorComponent,
     PreloaderComponent,
     MedicalRecordsComponent,
-    PrescriptionComponent
+    PrescriptionComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
