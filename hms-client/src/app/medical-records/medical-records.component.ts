@@ -21,7 +21,8 @@ export class MedicalRecordsComponent implements OnInit {
     paymentRecords: '',
     imageUrls: ''
   };
-
+  
+  selectedFile: File | null = null;
   patients: any[] = [];
   selectedFiles: File[] = [];
   medicalRecords: any[] = [];
@@ -34,15 +35,12 @@ export class MedicalRecordsComponent implements OnInit {
     this.getAllMedicalRecords();
   }
 
-  onFileSelected(event: any): void {
-    this.selectedFiles = Array.from(event.target.files);
-    console.log("Selected files:", this.selectedFiles);
-  }
-
   getAllMedicalRecords(): void {
     this.hmsService.GetAllMedicalRecords().subscribe(
       (data: any) => {
         this.medicalRecords = data.map((record: any) => ({
+          id: record.id,
+          patientId: record.patientId,
           patientName: record.patientName,
           diagnosis: record.diagnosis,
           treatment: record.treatment,
@@ -53,14 +51,17 @@ export class MedicalRecordsComponent implements OnInit {
           laboratoryResults: record.laboratory_Results,
           therapies: record.therapies,
           paymentRecords: record.paymentRecords,
-          imageUrls: record.imageUrls 
-          ? `https://localhost:7212${record.imageUrls}` 
-          : null
+          imageUrls: record.imageUrls ? `https://localhost:7212${record.imageUrls}` : null
         }));
+        console.log('Medical Records:', this.medicalRecords);
+      },
+      error => {
+        console.error('Error fetching medical records:', error);
+        alert('Error fetching medical records!');
       }
     );
-    
   }
+  
 
   private formatDate(dateString: string): string {
     if (!dateString) return '';
@@ -127,6 +128,14 @@ export class MedicalRecordsComponent implements OnInit {
       }
     );
   }
+  selectedImageUrl: string | null = null;
+  openImageModal(url: string) {
+    this.selectedImageUrl = url;
+  }
+
+  closeImageModal() {
+    this.selectedImageUrl = null;
+  }
 
   updateMedicalRecord(): void {
     if (this.medicalRecord.id === 0) {
@@ -167,25 +176,11 @@ export class MedicalRecordsComponent implements OnInit {
     );
   }
 
-  deleteMedicalRecord(id: number): void {
-    if (confirm('Are you sure you want to delete this medical record?')) {
-      this.hmsService.DeleteMedicalRecord(id).subscribe(
-        () => {
-          alert('Record deleted successfully!');
-          this.getAllMedicalRecords();
-        },
-        error => {
-          console.error('Error deleting record:', error);
-          alert('Failed to delete record.');
-        }
-      );
-    }
-  }
-
   getPatients(): void {
     this.hmsService.GetPatient().subscribe(
       (data: any[]) => {
         this.patients = data;
+        console.log("Patients loaded:", this.patients);
       },
       error => {
         console.error('Error fetching patients:', error);
@@ -195,15 +190,28 @@ export class MedicalRecordsComponent implements OnInit {
   }
 
   editRecord(record: any): void {
+    console.log("Editing record:", record);
     this.medicalRecord = {
       ...record,
-      next_Visit_Date: record.nextVisitDate // Ensure this is editable again
+      next_Visit_Date: record.nextVisitDate
     };
     this.isEditMode = true;
   }
-
+  
+  onFileSelected(event: any): void {
+    this.selectedFiles = Array.from(event.target.files);
+    this.medicalRecord.imageUrls = '';
+    console.log("Selected files:", this.selectedFiles);
+  }
+  
   deleteRecord(id: number): void {
+    if (!id) {
+      console.error('Invalid ID for deletion');
+      alert('Invalid ID for deletion');
+      return;
+    }
     if (confirm('Are you sure you want to delete this record?')) {
+      console.log('Deleting record with ID:', id);
       this.hmsService.DeleteMedicalRecord(id).subscribe(
         () => {
           alert('Record deleted successfully!');
@@ -216,7 +224,7 @@ export class MedicalRecordsComponent implements OnInit {
       );
     }
   }
-
+  
   onSubmit(): void {
     if (this.isEditMode) {
       this.updateMedicalRecord();

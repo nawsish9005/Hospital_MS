@@ -14,9 +14,9 @@
                                         <select class="form-control" id="patientId" [(ngModel)]="medicalRecord.patientId" name="patientId" required>
                                             <option value="">Select Patient</option>
                                             <option *ngFor="let patient of patients" [value]="patient.id">
-                                                {{ patient.name }}
+                                              {{ patient.name }}
                                             </option>
-                                        </select>
+                                          </select>
                                         <label for="patientId">Patient</label>
                                         <div class="invalid-feedback">Please select a valid patient</div>
                                     </div>
@@ -96,6 +96,17 @@
                                     <label for="imageUrls" class="">Upload Medical Images</label>
                                     <input class="form-control" type="file" id="imageUrls" (change)="onFileSelected($event)" name="imageUrls" multiple>
                                 </div>
+
+                                <div *ngIf="medicalRecord.imageUrls && !selectedFile" class="mt-2">
+                                    <img 
+                                      [src]="medicalRecord.imageUrls" 
+                                      alt="Current Image" 
+                                      width="100" 
+                                      height="100" 
+                                      style="cursor: pointer; border: 1px solid #ccc; border-radius: 5px;"
+                                      (click)="openImageModal(medicalRecord.imageUrls)" 
+                                    />
+                                  </div>
                             </div>
 
                             <div class="mt-4 text-center">
@@ -155,7 +166,7 @@
                             </td>
                             <td>
                               <button (click)="editRecord(record)" class="btn btn-sm btn-warning">Edit</button>
-                              <button (click)="deleteMedicalRecord(record.id)" class="btn btn-sm btn-danger">Delete</button>
+                              <button (click)="deleteRecord(record.id)" class="btn btn-sm btn-danger">Delete</button>
                             </td>
                           </tr>
                         </tbody>
@@ -166,3 +177,33 @@
         </div>
     </div>
 </section>
+
+
+<!-- Image Modal -->
+<div 
+  class="modal fade show d-block" 
+  *ngIf="selectedImageUrl" 
+  tabindex="-1" 
+  style="background-color: rgba(0,0,0,0.7);"
+  (click)="closeImageModal()"
+>
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+    <div class="modal-content bg-transparent border-0">
+      <div class="modal-body d-flex justify-content-center align-items-center p-0">
+        <img 
+          [src]="selectedImageUrl" 
+          alt="Doctor Image" 
+          class="img-fluid rounded shadow" 
+          style="max-height: 90vh;"
+          (click)="$event.stopPropagation()" 
+        />
+      </div>
+      <button 
+        type="button" 
+        class="btn-close position-absolute end-0 m-3 bg-white rounded-circle p-2" 
+        aria-label="Close" 
+        (click)="closeImageModal()"
+      ></button>
+    </div>
+  </div>
+</div>
