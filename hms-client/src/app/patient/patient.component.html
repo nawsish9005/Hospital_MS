@@ -166,7 +166,9 @@
                     <img *ngIf="patient.imageUrls" 
                       [src]="patient.imageUrls" 
                       alt="Patient Image" 
-                    width="100" height="100" />
+                    width="80" height="80"
+                    style="cursor: pointer; border: 1px solid #ccc; border-radius: 5px;" 
+                        (click)="openImageModal(patient.imageUrls)" />
                   </td>
                   <td>
                     <button class="btn btn-warning btn-sm" (click)="editRecord(patient)">Edit</button>

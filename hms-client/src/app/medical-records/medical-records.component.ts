@@ -8,7 +8,7 @@ import { HmsService } from '../services/hms.service';
 })
 export class MedicalRecordsComponent implements OnInit {
   medicalRecord = {
-    id: 0,  
+    id: 0,
     patientId: 0,
     diagnosis: '',
     treatment: '',
@@ -42,33 +42,40 @@ export class MedicalRecordsComponent implements OnInit {
   getAllMedicalRecords(): void {
     this.hmsService.GetAllMedicalRecords().subscribe(
       (data: any) => {
-        if (Array.isArray(data)) {
-          this.medicalRecords = data.map(record => ({
-            ...record,
-            patientName: record.patientName,
-            nextVisitDate: this.formatDate(record.nextVisitDate)
-          }));
-        } else {
-          console.error('Unexpected data format:', data);
-          this.medicalRecords = [];
-        }
-      },
-      error => console.error('Error fetching medical records:', error)
+        this.medicalRecords = data.map((record: any) => ({
+          patientName: record.patientName,
+          diagnosis: record.diagnosis,
+          treatment: record.treatment,
+          nextVisitDate: this.formatDate(record.next_Visit_Date),
+          consultationNotes: record.consultation_Notes,
+          followUpNotes: record.followUp_Notes,
+          currentMedications: record.current_medications,
+          laboratoryResults: record.laboratory_Results,
+          therapies: record.therapies,
+          paymentRecords: record.paymentRecords,
+          imageUrls: record.imageUrls 
+          ? `https://localhost:7212${record.imageUrls}` 
+          : null
+        }));
+      }
     );
+    
   }
 
   private formatDate(dateString: string): string {
     if (!dateString) return '';
-  
     try {
       const date = new Date(dateString);
-      return date.toISOString().split('T')[0]; // YYYY-MM-DD format
+      if (isNaN(date.getTime())) {
+        console.warn('Invalid date string:', dateString);
+        return dateString;
+      }
+      return date.toISOString().split('T')[0];
     } catch (e) {
-      console.error('Error formatting date:', e);
+      console.error('Date formatting error:', e);
       return dateString;
     }
   }
-  
 
   getMedicalRecordById(id: number): void {
     this.hmsService.GetMedicalRecordById(id).subscribe(
@@ -101,7 +108,6 @@ export class MedicalRecordsComponent implements OnInit {
     formData.append('nextVisitDate', this.medicalRecord.next_Visit_Date);
     formData.append('paymentRecords', this.medicalRecord.paymentRecords);
 
-    // Append multiple images
     this.selectedFiles.forEach(file => {
       formData.append('images', file);
     });
@@ -165,13 +171,12 @@ export class MedicalRecordsComponent implements OnInit {
     if (confirm('Are you sure you want to delete this medical record?')) {
       this.hmsService.DeleteMedicalRecord(id).subscribe(
         () => {
-          console.log('Medical record deleted successfully!');
-          alert('Medical record deleted successfully!');
+          alert('Record deleted successfully!');
           this.getAllMedicalRecords();
         },
         error => {
-          console.error('Error deleting medical record:', error);
-          alert('Failed to delete medical record.');
+          console.error('Error deleting record:', error);
+          alert('Failed to delete record.');
         }
       );
     }
@@ -190,7 +195,10 @@ export class MedicalRecordsComponent implements OnInit {
   }
 
   editRecord(record: any): void {
-    this.medicalRecord = { ...record };
+    this.medicalRecord = {
+      ...record,
+      next_Visit_Date: record.nextVisitDate // Ensure this is editable again
+    };
     this.isEditMode = true;
   }
 
@@ -215,6 +223,11 @@ export class MedicalRecordsComponent implements OnInit {
     } else {
       this.createMedicalRecord();
     }
+  }
+
+  getPatientName(patientId: number): string {
+    const patient = this.patients.find(p => p.id === patientId);
+    return patient ? patient.name : 'Unknown';
   }
 
   resetForm(): void {

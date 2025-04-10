@@ -14,7 +14,7 @@
                                         <select class="form-control" id="patientId" [(ngModel)]="medicalRecord.patientId" name="patientId" required>
                                             <option value="">Select Patient</option>
                                             <option *ngFor="let patient of patients" [value]="patient.id">
-                                                {{ patient.name }} (ID: {{ patient.id }})
+                                                {{ patient.name }}
                                             </option>
                                         </select>
                                         <label for="patientId">Patient</label>
@@ -120,33 +120,47 @@
                 </h4>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>#</th>
-                                <th>Patient ID</th>
-                                <th>Diagnosis</th>
-                                <th>Treatment</th>
-                                <th>Next Visit</th>
-                                <th>Actions</th>
-                            </tr>
+                        <thead>
+                          <tr>
+                            <th>Patient</th>
+                            <th>Diagnosis</th>
+                            <th>Treatment</th>
+                            <th>Current Medications</th>
+                            <th>Consultation Notes</th>
+                            <th>Follow-Up Notes</th>
+                            <th>Laboratory Results</th>
+                            <th>Therapies</th>
+                            <th>Next Visit</th>
+                            <th>Payment Records</th>
+                            <th>Images</th>
+                            <th>Actions</th>
+                          </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let record of medicalRecords; let i = index">
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ record.patientName }}</td>
-                                <td>{{ record.diagnosis }}</td>
-                                <td>{{ record.treatment }}</td>
-                                <td>{{ record.next_Visit_Date }}</td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm" (click)="editRecord(record)">Edit</button>
-                                    <button class="btn btn-danger btn-sm" (click)="deleteRecord(record.id)">Delete</button>
-                                </td>
-                            </tr>
-                            <tr *ngIf="medicalRecords.length === 0">
-                                <td colspan="6" class="text-center">No medical records found</td>
-                            </tr>
+                          <tr *ngFor="let record of medicalRecords">
+                            <td>{{ record.patientName }}</td>
+                            <td>{{ record.diagnosis }}</td>
+                            <td>{{ record.treatment }}</td>
+                            <td>{{ record.currentMedications }}</td>
+                            <td>{{ record.consultationNotes }}</td>
+                            <td>{{ record.followUpNotes }}</td>
+                            <td>{{ record.laboratoryResults }}</td>
+                            <td>{{ record.therapies }}</td>
+                            <td>{{ record.nextVisitDate }}</td>
+                            <td>{{ record.paymentRecords }}</td>
+                            <td>
+                              <div *ngIf="record.imageUrls">
+                                <img *ngFor="let img of record.imageUrls.split(',')" [src]="img" alt="Image" width="60" height="60" style="margin-right: 5px;">
+                              </div>
+                            </td>
+                            <td>
+                              <button (click)="editRecord(record)" class="btn btn-sm btn-warning">Edit</button>
+                              <button (click)="deleteMedicalRecord(record.id)" class="btn btn-sm btn-danger">Delete</button>
+                            </td>
+                          </tr>
                         </tbody>
-                    </table>
+                      </table>
+                      
                 </div>
             </div>
         </div>

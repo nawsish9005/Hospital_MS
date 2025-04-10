@@ -88,7 +88,7 @@ export class AppointmentComponent implements OnInit {
   editAppointment(appointment: any): void {
     this.appointment = {
       ...appointment,
-      date: appointment.date?.split('T')[0]  // Convert "2025-03-30T00:00:00" to "2025-03-30"
+      date: appointment.date?.split('T')[0]
     };
     this.isEditMode = true;
   }

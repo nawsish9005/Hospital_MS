@@ -26,8 +26,8 @@ export class HmsService {
     return this.http.post(this.baseUrl + this.appointmentUrl, data);
   }
   
-  public UpdateAppointment(data: any, appointment: { id: number; doctorId: number; patientId: number; purpose: string; date: string; }){
-    return this.http.put(this.baseUrl + this.appointmentUrl, data)
+  public UpdateAppointment(id:number, data: any){
+    return this.http.put(`${this.baseUrl + this.appointmentUrl}/${id}`, data)
   }
   
   public DeleteAppointment(id: number){
@@ -75,8 +75,8 @@ export class HmsService {
     return this.http.post(this.baseUrl + this.prescriptionUrl, data);
   }
   
-  public UpdatePrescription(data: any, prescription: any){
-    return this.http.put(this.baseUrl + this.prescriptionUrl, data)
+  public UpdatePrescription(id:number, data: any){
+    return this.http.put(`${this.baseUrl + this.prescriptionUrl}/${id}`, data)
   }
   
   public DeletePrescription(id: number){
@@ -99,8 +99,8 @@ export class HmsService {
     return this.http.post(this.baseUrl + this.medicalRecordUrl, data);
   }
   
-  public UpdateMedicalRecord(data: any, formData: FormData){
-    return this.http.put(this.baseUrl + this.medicalRecordUrl, data)
+  public UpdateMedicalRecord(id: number, data: any){
+    return this.http.put(`${this.baseUrl + this.medicalRecordUrl}/${id}`, data)
   }
   
   public DeleteMedicalRecord(id: number){
@@ -123,8 +123,8 @@ export class HmsService {
     return this.http.post(this.baseUrl + this.patientUrl, data);
   }
   
-  public UpdatePatient(data: any, formData: FormData){
-    return this.http.put(this.baseUrl + this.patientUrl, data)
+  public UpdatePatient( id: number, data: any){
+    return this.http.put(`${this.baseUrl + this.patientUrl}/${id}`, data)
   }
   
   public DeletePatient(id: number){
