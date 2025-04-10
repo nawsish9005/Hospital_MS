@@ -17,8 +17,24 @@
       "PackagePath": "staticwebassets\\images\\doctor\\agbb.jpeg"
     },
     {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\doctor\\blog-1.jpg",
+      "PackagePath": "staticwebassets\\images\\doctor\\blog-1.jpg"
+    },
+    {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\medicalRecords\\1737405211746.jpg",
+      "PackagePath": "staticwebassets\\images\\medicalRecords\\1737405211746.jpg"
+    },
+    {
       "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\medicalRecords\\Screenshot 2025-02-26 164351.png",
       "PackagePath": "staticwebassets\\images\\medicalRecords\\Screenshot 2025-02-26 164351.png"
+    },
+    {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\medicalRecords\\service-1.jpg",
+      "PackagePath": "staticwebassets\\images\\medicalRecords\\service-1.jpg"
+    },
+    {
+      "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\medicalRecords\\service-2.jpg",
+      "PackagePath": "staticwebassets\\images\\medicalRecords\\service-2.jpg"
     },
     {
       "Id": "E:\\filessss\\Hospital_MS\\HMS\\HMS\\wwwroot\\images\\patient\\121810=.jpg",

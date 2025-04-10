@@ -32,7 +32,14 @@ namespace HMS.Controllers
                         PatientName = mr.Patient.Name,
                         mr.Diagnosis,
                         mr.Treatment,
-                        mr.Next_Visit_Date
+                        mr.Next_Visit_Date,
+                        mr.Consultation_Notes,
+                        mr.FollowUp_Notes,
+                        mr.Current_medications,
+                        mr.Laboratory_Results,
+                        mr.Therapies,
+                        mr.PaymentRecords,
+                        mr.ImageUrls
                     })
                     .AsQueryable();
 
