@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HmsService } from '../services/hms.service';
 
 @Component({
@@ -20,6 +20,8 @@ export class DoctorComponent implements OnInit {
     imageUrl: '',
     specialization: ''
   };
+
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   selectedFile: File | null = null;
   doctors: Doctor[] = [];
@@ -182,6 +184,11 @@ export class DoctorComponent implements OnInit {
     };
     this.selectedFile = null;
     this.isEditMode = false;
+
+    // Reset the actual file input element
+  if (this.fileInput) {
+    this.fileInput.nativeElement.value = '';
+  }
   }
 
 }

@@ -88,7 +88,7 @@
                   
                   <div class="col-md-4 mb-3">
                     <label for="imageUrl" class="">Profile Image</label>
-                    <input class="form-control" type="file" id="imageUrl" (change)="onFileSelected($event)" name="imageUrl">
+                    <input #fileInput class="form-control" type="file" id="imageUrl" (change)="onFileSelected($event)" name="imageUrl">
                   </div>
                   <div *ngIf="doctor.imageUrl && !selectedFile" class="mt-2 text-end">
                     <img 
