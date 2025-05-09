@@ -1,4 +1,5 @@
 ﻿using HMS.Data;
+using HMS.Data.Repository.IRepository;
 using HMS.Models;
 using HMS.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
@@ -10,42 +11,33 @@ namespace HMS.Controllers
     [Route("api/[controller]")]
     public class DoctorController : Controller
     {
-        private readonly ApplicationDbContext context;
-        private readonly IWebHostEnvironment env;
+        private readonly IDoctorRepository _doctorRepo;
 
-        public DoctorController(ApplicationDbContext context, IWebHostEnvironment env)
+        public DoctorController(IDoctorRepository doctorRepo)
         {
-            this.context = context;
-            this.env = env;
+            _doctorRepo = doctorRepo;
         }
 
-        // Get All Doctors
+        // GET: api/Doctor
         [HttpGet]
-        public async Task<IActionResult> GetDoctors()
+        public IActionResult GetDoctors()
         {
-            var doctors = await context.Doctors.ToListAsync();
+            var doctors = _doctorRepo.GetAll();
             return Ok(doctors);
         }
 
-        // Get Doctor by ID
+        // GET: api/Doctor/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetDoctor(int id)
+        public IActionResult GetDoctor(int id)
         {
-            var doctor = await context.Doctors.FindAsync(id);
+            var doctor = _doctorRepo.Get(d => d.Id == id);
             if (doctor == null)
                 return NotFound();
 
             return Ok(doctor);
         }
 
-        //[HttpPost]
-        //public async Task<ActionResult<Doctor>> CreateDoctor(Doctor doctor)
-        //{
-        //    await context.Doctors.AddAsync(doctor);
-        //    await context.SaveChangesAsync();
-        //    return Ok(doctor);
-        //}
-
+        // POST: api/Doctor
         [HttpPost]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateDoctor([FromForm] DoctorDTO doctorDto, [FromForm] IFormFile? image)
@@ -64,27 +56,8 @@ namespace HMS.Controllers
                     Specialization = doctorDto.Specialization
                 };
 
-                if (image != null)
-                {
-                    var uploadsDir = Path.Combine(env.WebRootPath, "images", "doctor");
-                    if (!Directory.Exists(uploadsDir))
-                    {
-                        Directory.CreateDirectory(uploadsDir);
-                    }
-
-                    var filePath = Path.Combine(uploadsDir, image.FileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);
-                    }
-
-                    doctor.ImageUrl = "/images/doctor/" + image.FileName;
-                }
-
-                context.Doctors.Add(doctor);
-                await context.SaveChangesAsync();
-
-                return CreatedAtAction(nameof(GetDoctor), new { id = doctor.Id }, doctor);
+                var result = await _doctorRepo.AddWithImageAsync(doctor, image);
+                return CreatedAtAction(nameof(GetDoctor), new { id = result.Id }, result);
             }
             catch (Exception ex)
             {
@@ -92,48 +65,30 @@ namespace HMS.Controllers
             }
         }
 
+        // PUT: api/Doctor/5
         [HttpPut("{id}")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> UpdatePatient(int id, [FromForm] DoctorDTO doctorDto, [FromForm] IFormFile? image)
+        public async Task<IActionResult> UpdateDoctor(int id, [FromForm] DoctorDTO doctorDto, [FromForm] IFormFile? image)
         {
             try
             {
-                var doctor = await context.Doctors.FindAsync(id);
-                if (doctor == null)
+                var updateDoctor = new Doctor
                 {
-                    return NotFound($"Patient with ID {id} not found.");
-                }
+                    Name = doctorDto.Name,
+                    Contact = doctorDto.Contact,
+                    Email = doctorDto.Email,
+                    Address = doctorDto.Address,
+                    Region = doctorDto.Region,
+                    Country = doctorDto.Country,
+                    PostalCode = doctorDto.PostalCode,
+                    Specialization = doctorDto.Specialization
+                };
 
-                // Update patient details
-                doctor.Name = doctorDto.Name;
-                doctor.Contact = doctorDto.Contact;
-                doctor.Email = doctorDto.Email;
-                doctor.Address = doctorDto.Address;
-                doctor.Region = doctorDto.Region;
-                doctor.Country = doctorDto.Country;
-                doctor.PostalCode = doctorDto.PostalCode;
+                var result = await _doctorRepo.UpdateWithImageAsync(id, updateDoctor, image);
+                if (result == null)
+                    return NotFound($"Doctor with ID {id} not found.");
 
-                if (image != null)
-                {
-                    var uploadsDir = Path.Combine(env.WebRootPath, "images", "doctor");
-                    if (!Directory.Exists(uploadsDir))
-                    {
-                        Directory.CreateDirectory(uploadsDir);
-                    }
-
-                    var filePath = Path.Combine(uploadsDir, image.FileName);
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await image.CopyToAsync(stream);
-                    }
-
-                    doctor.ImageUrl = "/images/doctor/" + image.FileName;
-                }
-
-                context.Doctors.Update(doctor);
-                await context.SaveChangesAsync();
-
-                return Ok(doctor);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -141,29 +96,15 @@ namespace HMS.Controllers
             }
         }
 
+        // DELETE: api/Doctor/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDoctor(int id)
         {
             try
             {
-                var doctor = await context.Doctors.FindAsync(id);
-                if (doctor == null)
-                {
+                var deleted = await _doctorRepo.DeleteWithImageAsync(id);
+                if (!deleted)
                     return NotFound($"Doctor with ID {id} not found.");
-                }
-
-                // Delete the patient image if it exists
-                if (!string.IsNullOrEmpty(doctor.ImageUrl))
-                {
-                    var filePath = Path.Combine(env.WebRootPath, doctor.ImageUrl.TrimStart('/'));
-                    if (System.IO.File.Exists(filePath))
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
-                }
-
-                context.Doctors.Remove(doctor);
-                await context.SaveChangesAsync();
 
                 return NoContent();
             }
@@ -172,6 +113,5 @@ namespace HMS.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
     }
 }

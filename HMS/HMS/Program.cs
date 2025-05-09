@@ -1,4 +1,6 @@
 ﻿using HMS.Data;
+using HMS.Data.Repository;
+using HMS.Data.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -9,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
